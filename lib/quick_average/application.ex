@@ -12,6 +12,7 @@ defmodule QuickAverage.Application do
       QuickAverageWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: QuickAverage.PubSub},
+      QuickAverageWeb.Presence,
       # Start Finch
       {Finch, name: QuickAverage.Finch},
       # Start the Endpoint (http/https)

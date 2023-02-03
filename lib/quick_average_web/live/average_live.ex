@@ -1,5 +1,6 @@
 defmodule QuickAverageWeb.AverageLive do
   alias QuickAverage.Accounts.User
+  alias QuickAverageWeb.Presence
   use QuickAverageWeb, :live_view
 
   @impl true
@@ -13,10 +14,23 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(%{"room_id" => room_id}, _session, socket) do
     user = %User{}
     changeset = User.changeset(user, %{})
-    {:ok, assign(socket, %{changeset: changeset, user: user})}
+
+    Presence.track(
+      self(),
+      room_id,
+      socket.id,
+      %{"name" => "", "number" => nil}
+    )
+
+    {:ok,
+     assign(socket, %{
+       changeset: changeset,
+       user: user,
+       room_id: room_id
+     })}
   end
 
   @impl true
@@ -25,6 +39,13 @@ defmodule QuickAverageWeb.AverageLive do
       socket.assigns.user
       |> User.changeset(user_params)
       |> Map.put(:action, :validate)
+
+    Presence.update(
+      self(),
+      socket.assigns.room_id,
+      socket.id,
+      user_params
+    )
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
