@@ -1,5 +1,6 @@
 defmodule QuickAverageWeb.AverageLive do
   alias QuickAverage.Accounts.User
+  alias Phoenix.PubSub
   alias QuickAverageWeb.Presence
   use QuickAverageWeb, :live_view
 
@@ -10,6 +11,11 @@ defmodule QuickAverageWeb.AverageLive do
       <.input field={{f, :name}} type="text" label="Name" />
       <.input field={{f, :number}} type="number" label="Number" />
     </.simple_form>
+    <%= for user <- @users do %>
+      <br />
+      <%= user.name %>
+      <%= user.number %>
+    <% end %>
     """
   end
 
@@ -25,11 +31,14 @@ defmodule QuickAverageWeb.AverageLive do
       %{"name" => "", "number" => nil}
     )
 
+    PubSub.subscribe(QuickAverage.PubSub, Presence.display_topic(room_id))
+
     {:ok,
      assign(socket, %{
        changeset: changeset,
        user: user,
-       room_id: room_id
+       room_id: room_id,
+       users: []
      })}
   end
 
@@ -48,5 +57,10 @@ defmodule QuickAverageWeb.AverageLive do
     )
 
     {:noreply, assign(socket, :changeset, changeset)}
+  end
+
+  @impl true
+  def handle_info(%{users: users}, socket) do
+    {:noreply, assign(socket, %{users: users})}
   end
 end
