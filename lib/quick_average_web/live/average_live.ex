@@ -2,6 +2,7 @@ defmodule QuickAverageWeb.AverageLive do
   alias QuickAverage.Accounts.User
   use QuickAverageWeb, :live_view
 
+  @impl true
   def render(assigns) do
     ~H"""
     <.simple_form :let={f} for={@changeset} id="user-form" phx-change="update" phx-submit="save">
