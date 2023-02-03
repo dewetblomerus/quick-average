@@ -1,4 +1,6 @@
 defmodule QuickAverageWeb.Presence do
+  alias QuickAverage.Users
+
   use Phoenix.Presence,
     otp_app: :my_app,
     pubsub_server: QuickAverage.PubSub
@@ -9,7 +11,9 @@ defmodule QuickAverageWeb.Presence do
   end
 
   def handle_metas(topic, %{joins: joins, leaves: leaves}, presences, state) do
-    dbg(presences)
+    presences
+    |> Users.from_presences()
+    |> dbg()
 
     {:ok, state}
   end
