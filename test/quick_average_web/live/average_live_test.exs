@@ -1,12 +1,10 @@
 defmodule QuickAverageWeb.AverageLiveTest do
   use QuickAverageWeb.ConnCase
-  alias QuickAverage.Users
-  alias QuickAverageWeb.Presence
+  alias QuickAverage.DisplayState
 
   import Phoenix.LiveViewTest
 
   @create_attrs %{name: "some name", number: 42}
-  @update_attrs %{name: "some updated name", number: 43}
 
   describe "Index" do
     test "renders the form", %{conn: conn} do
@@ -46,7 +44,7 @@ defmodule QuickAverageWeb.AverageLiveTest do
         }
       ]
 
-      send(index_live.pid, %{users: users})
+      send(index_live.pid, %DisplayState{users: users})
       assert render(index_live) =~ "Bob"
       assert render(index_live) =~ "99"
       assert render(index_live) =~ "De Wet"

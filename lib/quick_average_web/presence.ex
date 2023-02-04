@@ -1,5 +1,6 @@
 defmodule QuickAverageWeb.Presence do
   alias QuickAverage.Users
+  alias QuickAverage.DisplayState
 
   use Phoenix.Presence,
     otp_app: :my_app,
@@ -13,7 +14,7 @@ defmodule QuickAverageWeb.Presence do
   def handle_metas(room_id, _joins_leaves, presences, state) do
     users = Users.from_presences(presences)
 
-    broadcast(display_topic(room_id), %{users: users})
+    broadcast(display_topic(room_id), %DisplayState{users: users})
 
     {:ok, state}
   end

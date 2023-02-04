@@ -1,7 +1,8 @@
 defmodule QuickAverageWeb.AverageLive do
-  alias QuickAverage.Users
-  alias QuickAverage.Accounts.User
   alias Phoenix.PubSub
+  alias QuickAverage.User
+  alias QuickAverage.DisplayState
+  alias QuickAverage.Users
   alias QuickAverageWeb.Presence
   use QuickAverageWeb, :live_view
 
@@ -49,7 +50,7 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   @impl true
-  def handle_info(%{users: users}, socket) do
+  def handle_info(%DisplayState{users: users}, socket) do
     {:noreply, assign(socket, %{users: users})}
   end
 

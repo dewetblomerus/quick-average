@@ -1,12 +1,10 @@
-defmodule QuickAverage.Accounts.User do
+defmodule QuickAverage.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "users" do
-    field :name, :string
-    field :number, :integer
-
-    timestamps()
+  embedded_schema do
+    field(:name, :string)
+    field(:number, :integer)
   end
 
   @doc false
