@@ -6,7 +6,7 @@ defmodule QuickAverage.Users do
     |> Enum.sort()
   end
 
-  defp meta_to_user([%{"name" => name, "number" => number}]) do
+  defp meta_to_user([%{"name" => name, "number" => number} | _tail]) do
     %{name: name, number: number}
   end
 

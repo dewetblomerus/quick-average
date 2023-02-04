@@ -32,7 +32,7 @@ defmodule QuickAverageWeb.AverageLive do
        changeset: changeset,
        user: user,
        room_id: room_id,
-       users: users(room_id)
+       users: list_users(room_id)
      })}
   end
 
@@ -71,7 +71,7 @@ defmodule QuickAverageWeb.AverageLive do
     )
   end
 
-  def users(room_id) do
+  def list_users(room_id) do
     room_id
     |> Presence.list()
     |> Users.from_presences()

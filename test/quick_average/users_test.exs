@@ -38,7 +38,8 @@ defmodule QuickAverage.UsersTest do
           :phx_ref_prev => "F0Bfy0fqQkHf-gDl",
           "name" => "Bob",
           "number" => "99"
-        }
+        },
+        %{another: "ignored meta"}
       ]
     }
   }
