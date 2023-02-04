@@ -1,4 +1,5 @@
 defmodule QuickAverageWeb.AverageLive do
+  alias QuickAverage.Users
   alias QuickAverage.Accounts.User
   alias Phoenix.PubSub
   alias QuickAverageWeb.Presence
@@ -33,12 +34,17 @@ defmodule QuickAverageWeb.AverageLive do
 
     PubSub.subscribe(QuickAverage.PubSub, Presence.display_topic(room_id))
 
+    users =
+      room_id
+      |> Presence.list()
+      |> Users.from_presences()
+
     {:ok,
      assign(socket, %{
        changeset: changeset,
        user: user,
        room_id: room_id,
-       users: []
+       users: users
      })}
   end
 

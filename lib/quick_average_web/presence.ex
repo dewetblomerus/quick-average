@@ -13,16 +13,20 @@ defmodule QuickAverageWeb.Presence do
   def handle_metas(room_id, _joins_leaves, presences, state) do
     users = Users.from_presences(presences)
 
-    Phoenix.PubSub.local_broadcast(
-      QuickAverage.PubSub,
-      display_topic(room_id),
-      %{users: users}
-    )
+    broadcast(display_topic(room_id), %{users: users})
 
     {:ok, state}
   end
 
   def display_topic(room_id) do
     "#{room_id}_display"
+  end
+
+  def broadcast(topic, message) do
+    Phoenix.PubSub.local_broadcast(
+      QuickAverage.PubSub,
+      topic,
+      message
+    )
   end
 end

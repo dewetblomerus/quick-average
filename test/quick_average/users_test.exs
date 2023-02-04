@@ -21,18 +21,46 @@ defmodule QuickAverage.UsersTest do
     ]
   }
 
-  @users [
-    %{
-      name: "De Wet",
-      number: "9"
+  @presence_list %{
+    "phx-F0CZi2iBCzv8twKk" => %{
+      metas: [
+        %{
+          :phx_ref => "F0CZi2iBn1cM0ADl",
+          "name" => "De Wet",
+          "number" => "9"
+        }
+      ]
     },
+    "phx-F0Bfyj6AREQQNwAi" => %{
+      metas: [
+        %{
+          :phx_ref => "F0Bfy08QWAzf-gEF",
+          :phx_ref_prev => "F0Bfy0fqQkHf-gDl",
+          "name" => "Bob",
+          "number" => "99"
+        }
+      ]
+    }
+  }
+
+  @users [
     %{
       name: "Bob",
       number: "99"
+    },
+    %{
+      name: "De Wet",
+      number: "9"
     }
   ]
 
-  test("generate/1") do
-    assert Users.from_presences(@presences) == @users
+  describe("from_presences/1") do
+    test("with presences") do
+      assert Users.from_presences(@presences) == @users
+    end
+
+    test("with a presence_list") do
+      assert Users.from_presences(@presence_list) == @users
+    end
   end
 end
