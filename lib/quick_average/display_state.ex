@@ -1,4 +1,5 @@
 defmodule QuickAverage.DisplayState do
+  alias QuickAverage.DisplayNumber
   alias QuickAverage.User
 
   defstruct [:users, :average]
@@ -22,7 +23,7 @@ defmodule QuickAverage.DisplayState do
     numbers = Enum.map(users, & &1.number)
 
     if Enum.all?(numbers, &is_number/1) do
-      Enum.sum(numbers) / Enum.count(numbers)
+      DisplayNumber.parse(Enum.sum(numbers) / Enum.count(numbers))
     else
       "Waiting"
     end

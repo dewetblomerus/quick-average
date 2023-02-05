@@ -30,5 +30,10 @@ defmodule QuickAverage.DisplayNumberTest do
     test("empty string syas Waiting") do
       assert DisplayNumber.parse("") == "Waiting"
     end
+
+    test("round float is changed to an integer") do
+      assert DisplayNumber.parse(5.0) == 5
+      assert is_integer(DisplayNumber.parse(5.0))
+    end
   end
 end

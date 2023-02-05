@@ -9,20 +9,22 @@ defmodule QuickAverage.DisplayNumber do
 
   def parse(number) when is_binary(number) do
     cond do
-      {float, ""} = Float.parse(number) -> Float.round(float, 2)
+      {float, ""} = Float.parse(number) -> parse(float)
       true -> "Waiting"
     end
-    |> integerize()
   end
 
-  def parse(number) when is_integer(number) or is_float(number) do
+  def parse(number) when is_integer(number), do: number
+
+  def parse(number) when is_float(number) do
     number
+    |> Float.round(2)
+    |> integerize()
   end
 
   defp integerize(number) when is_float(number) do
     if number && number == Float.round(number) do
-      number
-      |> round()
+      round(number)
     else
       number
     end
