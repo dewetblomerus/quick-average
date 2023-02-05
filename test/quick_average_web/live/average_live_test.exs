@@ -36,19 +36,21 @@ defmodule QuickAverageWeb.AverageLiveTest do
       users = [
         %{
           name: "Bob",
-          number: "99"
+          number: "440"
         },
         %{
           name: "De Wet",
-          number: "9"
+          number: "420"
         }
       ]
 
-      send(index_live.pid, %DisplayState{users: users})
+      display_state = DisplayState.from_users(users)
+      send(index_live.pid, display_state)
       assert render(index_live) =~ "Bob"
-      assert render(index_live) =~ "99"
+      assert render(index_live) =~ "440"
       assert render(index_live) =~ "De Wet"
-      assert render(index_live) =~ "9"
+      assert render(index_live) =~ "420"
+      assert render(index_live) =~ "430"
     end
   end
 end

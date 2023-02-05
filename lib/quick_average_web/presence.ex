@@ -12,9 +12,12 @@ defmodule QuickAverageWeb.Presence do
   end
 
   def handle_metas(room_id, _joins_leaves, presences, state) do
-    users = Users.from_presences(presences)
+    display_state =
+      presences
+      |> Users.from_presences()
+      |> DisplayState.from_users()
 
-    broadcast(display_topic(room_id), %DisplayState{users: users})
+    broadcast(display_topic(room_id), display_state)
 
     {:ok, state}
   end
