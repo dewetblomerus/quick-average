@@ -1,6 +1,7 @@
 defmodule QuickAverage.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias QuickAverage.DisplayNumber
 
   embedded_schema do
     field(:name, :string)
@@ -23,35 +24,6 @@ defmodule QuickAverage.User do
   end
 
   def structify(name, number) do
-    struct(__MODULE__, name: name, number: parse_number(number))
-  end
-
-  defp parse_number(nil) do
-    nil
-  end
-
-  defp parse_number("") do
-    nil
-  end
-
-  defp parse_number(number) when is_binary(number) do
-    cond do
-      {float, ""} = Float.parse(number) -> Float.round(float, 2)
-      true -> nil
-    end
-    |> integerize()
-  end
-
-  defp parse_number(number) when is_integer(number) or is_float(number) do
-    number
-  end
-
-  defp integerize(number) do
-    if number && number == Float.round(number) do
-      number
-      |> round()
-    else
-      number
-    end
+    struct(__MODULE__, name: name, number: DisplayNumber.parse(number))
   end
 end
