@@ -4,12 +4,12 @@ import Config
 # you can enable the server option below.
 config :quick_average, QuickAverageWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "4qt+wsOzyogsO0/Uy+8wkRHxTpzMMy4OguVQereWELuYN30O7zYpXbRgsfCHdpXB",
+  secret_key_base:
+    "4qt+wsOzyogsO0/Uy+8wkRHxTpzMMy4OguVQereWELuYN30O7zYpXbRgsfCHdpXB",
   server: false
 
 # In test we don't send emails.
-config :quick_average, QuickAverage.Mailer,
-  adapter: Swoosh.Adapters.Test
+config :quick_average, QuickAverage.Mailer, adapter: Swoosh.Adapters.Test
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
