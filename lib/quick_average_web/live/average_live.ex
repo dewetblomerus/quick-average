@@ -70,10 +70,7 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def handle_event("clear_clicked", _params, socket) do
-    socket.assigns.room_id
-    |> Presence.display_topic()
-    |> Presence.broadcast(:clear_number)
-
+    pubsub_broadcast(socket.assigns.room_id, :clear_number)
     {:noreply, socket}
   end
 
@@ -122,6 +119,12 @@ defmodule QuickAverageWeb.AverageLive do
       socket.id,
       user_params
     )
+  end
+
+  def pubsub_broadcast(room_id, event) do
+    room_id
+    |> Presence.display_topic()
+    |> Presence.broadcast(event)
   end
 
   def list_users(room_id) do
