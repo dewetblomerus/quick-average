@@ -1,6 +1,5 @@
 defmodule QuickAverageWeb.Presence do
-  alias QuickAverage.Users
-  alias QuickAverage.DisplayState
+  alias QuickAverage.{DisplayState, Users}
 
   use Phoenix.Presence,
     otp_app: :my_app,

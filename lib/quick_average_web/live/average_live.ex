@@ -1,10 +1,15 @@
 defmodule QuickAverageWeb.AverageLive do
-  alias Phoenix.PubSub
-  alias QuickAverage.User
-  alias QuickAverage.DisplayState
-  alias QuickAverage.Users
-  alias QuickAverageWeb.Presence
   use QuickAverageWeb, :live_view
+
+  alias Phoenix.PubSub
+
+  alias QuickAverage.{
+    DisplayState,
+    User,
+    Users
+  }
+
+  alias QuickAverageWeb.Presence
 
   @impl true
   def render(assigns) do
