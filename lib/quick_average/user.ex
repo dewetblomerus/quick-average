@@ -3,6 +3,8 @@ defmodule QuickAverage.User do
   import Ecto.Changeset
   alias QuickAverage.DisplayNumber
 
+  @fields [:name, :number]
+
   embedded_schema do
     field(:name, :string)
     field(:number, :float)
@@ -21,6 +23,13 @@ defmodule QuickAverage.User do
 
   def from_params(%{"name" => name, "number" => number}) do
     structify(name, number)
+  end
+
+  def to_params(%__MODULE__{} = user) do
+    user
+    |> Map.from_struct()
+    |> Map.take(@fields)
+    |> Map.new(fn {k, v} -> {Atom.to_string(k), v} end)
   end
 
   def structify(name, number) do

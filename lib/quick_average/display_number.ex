@@ -7,10 +7,14 @@ defmodule QuickAverage.DisplayNumber do
     "Waiting"
   end
 
+  def parse("Waiting") do
+    "Waiting"
+  end
+
   def parse(number) when is_binary(number) do
-    cond do
-      {float, ""} = Float.parse(number) -> parse(float)
-      true -> "Waiting"
+    case Float.parse(number) do
+      {float, ""} -> parse(float)
+      _ -> "Waiting"
     end
   end
 
