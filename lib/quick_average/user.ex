@@ -25,6 +25,10 @@ defmodule QuickAverage.User do
     structify(name, number)
   end
 
+  def from_params(%{"name" => name}) do
+    structify(name, nil)
+  end
+
   def to_params(%__MODULE__{} = user) do
     user
     |> Map.from_struct()

@@ -14,6 +14,7 @@ defmodule QuickAverageWeb.AverageLive do
   @impl true
   def render(assigns) do
     ~H"""
+    <div id="hooker" phx-hook="RestoreUser"></div>
     <.simple_form
       :let={f}
       for={@changeset}
@@ -55,6 +56,27 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   @impl true
+  def handle_event("restore_user", user_params, socket) do
+    user = User.from_params(user_params)
+
+    changeset =
+      user
+      |> User.changeset(user_params)
+      |> Map.put(:action, :validate)
+
+    presence_update(socket, User.to_params(user))
+
+    new_socket =
+      assign(
+        socket,
+        changeset: changeset,
+        user: user
+      )
+
+    {:noreply, new_socket}
+  end
+
+  @impl true
   def handle_event("update", %{"user" => user_params}, socket) do
     user = User.from_params(user_params)
 
@@ -65,12 +87,14 @@ defmodule QuickAverageWeb.AverageLive do
 
     presence_update(socket, user_params)
 
-    {:noreply,
-     assign(
-       socket,
-       changeset: changeset,
-       user: user
-     )}
+    new_socket =
+      assign(
+        socket,
+        changeset: changeset,
+        user: user
+      )
+
+    {:noreply, push_event(new_socket, "set_storage", %{name: user.name})}
   end
 
   @impl true
@@ -95,14 +119,9 @@ defmodule QuickAverageWeb.AverageLive do
 
     presence_update(socket, user_params)
 
-    {
-      :noreply,
-      push_event(
-        assign(socket, user: user, changeset: changeset),
-        "clear_number",
-        %{}
-      )
-    }
+    new_socket = assign(socket, user: user, changeset: changeset)
+
+    {:noreply, push_event(new_socket, "clear_number", %{})}
   end
 
   def presence_track(room_id, socket) do

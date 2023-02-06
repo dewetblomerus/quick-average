@@ -23,12 +23,35 @@ import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+
+let Hooks = {}
 
 window.addEventListener(`phx:clear_number`, () => {
   console.log("Clearing Number 🔥")
   document.getElementById("user-form_number").value = "";
 })
+
+window.addEventListener(`phx:set_storage`, (e) => {
+  for (const [key, value] of Object.entries(e.detail)) {
+    console.log(`Saving key: ${key} and value: ${value} to localStorage 💾`)
+    localStorage.setItem(key, value)
+  }
+})
+
+Hooks.RestoreUser = {
+  mounted() {
+    console.log("Restoring user from localStorage 🥶")
+    this.pushEvent('restore_user', {
+      name: localStorage.getItem('name'),
+    })
+  },
+}
+
+let liveSocket = new LiveSocket("/live", Socket, {
+  params: {_csrf_token: csrfToken},
+  hooks: Hooks
+})
+
 
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
