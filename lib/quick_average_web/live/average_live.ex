@@ -19,7 +19,7 @@ defmodule QuickAverageWeb.AverageLive do
       :let={f}
       for={@changeset}
       id="user-form"
-      phx-change="update"
+      phx-change="form_update"
       phx-submit="save"
     >
       <.input field={{f, :name}} type="text" label="Name" />
@@ -40,8 +40,7 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def mount(%{"room_id" => room_id}, _session, socket) do
-    user = %User{}
-    changeset = User.changeset(user, %{})
+    changeset = User.changeset(%User{}, %{})
     presence_track(room_id, socket)
     subscribe(room_id)
 
@@ -49,39 +48,38 @@ defmodule QuickAverageWeb.AverageLive do
      assign(socket, %{
        average: "Waiting",
        changeset: changeset,
-       user: user,
+       name: "",
        room_id: room_id,
        users: list_users(room_id)
      })}
   end
 
   @impl true
-  def handle_event("restore_user", user_params, socket) do
-    user = User.from_params(user_params)
+  def handle_event("restore_user", %{"name" => name} = partial_params, socket) do
+    user_params = Map.put(partial_params, "number", nil)
 
-    changeset =
-      user
-      |> User.changeset(user_params)
-      |> Map.put(:action, :validate)
+    changeset = User.changeset(%User{}, user_params)
 
-    presence_update(socket, User.to_params(user))
+    presence_update(socket, user_params)
 
     new_socket =
       assign(
         socket,
-        changeset: changeset,
-        user: user
+        name: name,
+        changeset: changeset
       )
 
     {:noreply, new_socket}
   end
 
   @impl true
-  def handle_event("update", %{"user" => user_params}, socket) do
-    user = User.from_params(user_params)
-
+  def handle_event(
+        "form_update",
+        %{"user" => %{"name" => name} = user_params},
+        socket
+      ) do
     changeset =
-      user
+      %User{}
       |> User.changeset(user_params)
       |> Map.put(:action, :validate)
 
@@ -91,10 +89,10 @@ defmodule QuickAverageWeb.AverageLive do
       assign(
         socket,
         changeset: changeset,
-        user: user
+        name: name
       )
 
-    {:noreply, push_event(new_socket, "set_storage", %{name: user.name})}
+    {:noreply, push_event(new_socket, "set_storage", %{name: name})}
   end
 
   @impl true
@@ -110,16 +108,13 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def handle_info(:clear_number, socket) do
-    user = %User{socket.assigns.user | number: nil}
-    user_params = User.to_params(user)
+    user_params = %{"name" => socket.assigns.name, "number" => nil}
 
-    changeset =
-      user
-      |> User.changeset(Map.from_struct(user))
+    changeset = User.changeset(%User{}, user_params)
 
     presence_update(socket, user_params)
 
-    new_socket = assign(socket, user: user, changeset: changeset)
+    new_socket = assign(socket, changeset: changeset)
 
     {:noreply, push_event(new_socket, "clear_number", %{})}
   end
