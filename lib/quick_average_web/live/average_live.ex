@@ -40,7 +40,7 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def mount(%{"room_id" => room_id}, _session, socket) do
-    changeset = User.changeset(%User{}, %{})
+    changeset = User.changeset(%{})
     presence_track(room_id, socket)
     subscribe(room_id)
 
@@ -58,7 +58,7 @@ defmodule QuickAverageWeb.AverageLive do
   def handle_event("restore_user", %{"name" => name} = partial_params, socket) do
     user_params = Map.put(partial_params, "number", nil)
 
-    changeset = User.changeset(%User{}, user_params)
+    changeset = User.changeset(user_params)
 
     presence_update(socket, user_params)
 
@@ -79,8 +79,7 @@ defmodule QuickAverageWeb.AverageLive do
         socket
       ) do
     changeset =
-      %User{}
-      |> User.changeset(user_params)
+      User.changeset(user_params)
       |> Map.put(:action, :validate)
 
     presence_update(socket, user_params)
@@ -110,7 +109,7 @@ defmodule QuickAverageWeb.AverageLive do
   def handle_info(:clear_number, socket) do
     user_params = %{"name" => socket.assigns.name, "number" => nil}
 
-    changeset = User.changeset(%User{}, user_params)
+    changeset = User.changeset(user_params)
 
     presence_update(socket, user_params)
 

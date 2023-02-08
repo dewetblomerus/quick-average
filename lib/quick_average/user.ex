@@ -11,8 +11,8 @@ defmodule QuickAverage.User do
   end
 
   @doc false
-  def changeset(user, attrs) do
-    user
+  def changeset(attrs) do
+    %__MODULE__{}
     |> cast(attrs, [:name, :number])
     |> validate_required([:name, :number])
   end
