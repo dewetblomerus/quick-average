@@ -1,5 +1,8 @@
 defmodule QuickAverageWeb.Presence do
-  alias QuickAverage.{DisplayState, Users}
+  alias QuickAverage.{
+    DisplayState,
+    Users
+  }
 
   use Phoenix.Presence,
     otp_app: :my_app,
@@ -16,7 +19,7 @@ defmodule QuickAverageWeb.Presence do
       |> Users.from_presences()
       |> DisplayState.from_users()
 
-    broadcast(display_topic(room_id), display_state)
+    broadcast(room_id, display_state)
 
     {:ok, state}
   end
@@ -25,7 +28,9 @@ defmodule QuickAverageWeb.Presence do
     "#{room_id}_display"
   end
 
-  def broadcast(topic, message) do
+  def broadcast(room_id, message) do
+    topic = display_topic(room_id)
+
     Phoenix.PubSub.local_broadcast(
       QuickAverage.PubSub,
       topic,

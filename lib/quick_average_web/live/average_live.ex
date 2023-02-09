@@ -1,15 +1,12 @@
 defmodule QuickAverageWeb.AverageLive do
   use QuickAverageWeb, :live_view
 
-  alias Phoenix.PubSub
-
   alias QuickAverage.{
     DisplayState,
-    User,
-    Users
+    User
   }
 
-  alias QuickAverageWeb.Presence
+  alias QuickAverageWeb.PresenceInterface
 
   @impl true
   def render(assigns) do
@@ -40,36 +37,30 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def mount(%{"room_id" => room_id}, _session, socket) do
-    changeset = User.changeset(%{})
-    presence_track(room_id, socket)
-    subscribe(room_id)
+    PresenceInterface.track(room_id, socket)
+    PresenceInterface.subscribe_display(room_id)
 
     {:ok,
      assign(socket, %{
        average: "Waiting",
-       changeset: changeset,
+       changeset: User.changeset(%{}),
        name: "",
        room_id: room_id,
-       users: list_users(room_id)
+       users: PresenceInterface.list_users(room_id)
      })}
   end
 
   @impl true
   def handle_event("restore_user", %{"name" => name} = partial_params, socket) do
     user_params = Map.put(partial_params, "number", nil)
+    PresenceInterface.update(socket, user_params)
 
-    changeset = User.changeset(user_params)
-
-    presence_update(socket, user_params)
-
-    new_socket =
-      assign(
-        socket,
-        name: name,
-        changeset: changeset
-      )
-
-    {:noreply, new_socket}
+    {:noreply,
+     assign(
+       socket,
+       name: name,
+       changeset: User.changeset(user_params)
+     )}
   end
 
   @impl true
@@ -78,11 +69,12 @@ defmodule QuickAverageWeb.AverageLive do
         %{"user" => %{"name" => name} = user_params},
         socket
       ) do
-    changeset =
-      User.changeset(user_params)
-      |> Map.put(:action, :validate)
+    PresenceInterface.update(socket, user_params)
 
-    presence_update(socket, user_params)
+    changeset =
+      user_params
+      |> User.changeset()
+      |> Map.put(:action, :validate)
 
     new_socket =
       assign(
@@ -96,7 +88,7 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def handle_event("clear_clicked", _params, socket) do
-    pubsub_broadcast(socket.assigns.room_id, :clear_number)
+    PresenceInterface.broadcast(socket.assigns.room_id, :clear_number)
     {:noreply, socket}
   end
 
@@ -111,47 +103,10 @@ defmodule QuickAverageWeb.AverageLive do
 
     changeset = User.changeset(user_params)
 
-    presence_update(socket, user_params)
+    PresenceInterface.update(socket, user_params)
 
     new_socket = assign(socket, changeset: changeset)
 
     {:noreply, push_event(new_socket, "clear_number", %{})}
-  end
-
-  def presence_track(room_id, socket) do
-    Presence.track(
-      self(),
-      room_id,
-      socket.id,
-      %{"name" => "Anonymous", "number" => "waiting"}
-    )
-  end
-
-  def presence_update(
-        socket,
-        %{"name" => _name, "number" => _number} = user_params
-      ) do
-    Presence.update(
-      self(),
-      socket.assigns.room_id,
-      socket.id,
-      user_params
-    )
-  end
-
-  def pubsub_broadcast(room_id, event) do
-    room_id
-    |> Presence.display_topic()
-    |> Presence.broadcast(event)
-  end
-
-  def list_users(room_id) do
-    room_id
-    |> Presence.list()
-    |> Users.from_presences()
-  end
-
-  def subscribe(room_id) do
-    PubSub.subscribe(QuickAverage.PubSub, Presence.display_topic(room_id))
   end
 end
