@@ -1,4 +1,4 @@
-defmodule QuickAverageWeb.Presence do
+defmodule QuickAverage.Presence do
   alias QuickAverage.{
     DisplayState,
     Users

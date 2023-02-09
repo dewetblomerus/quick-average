@@ -1,7 +1,8 @@
-defmodule QuickAverageWeb.PresenceInterface do
-  alias QuickAverageWeb.Presence
-
-  alias QuickAverage.Users
+defmodule QuickAverage.PresenceInterface do
+  alias QuickAverage.{
+    Presence,
+    Users
+  }
 
   def list_users(room_id) do
     room_id

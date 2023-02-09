@@ -3,10 +3,9 @@ defmodule QuickAverageWeb.AverageLive do
 
   alias QuickAverage.{
     DisplayState,
+    PresenceInterface,
     User
   }
-
-  alias QuickAverageWeb.PresenceInterface
 
   @impl true
   def render(assigns) do
