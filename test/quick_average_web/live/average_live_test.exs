@@ -33,18 +33,26 @@ defmodule QuickAverageWeb.AverageLiveTest do
     test "lists the users", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, ~p"/9")
 
-      users = [
-        %{
-          name: "Bob",
-          number: "440"
-        },
-        %{
-          name: "De Wet",
-          number: "420"
-        }
-      ]
+      presences = %{
+        "phx-F0BfS5VmmAjGVQAp" => [
+          %{
+            :phx_ref => "F0BfyHLOTZXf-gBl",
+            :phx_ref_prev => "F0BfyHBOLAzf-gAE",
+            "name" => "De Wet",
+            "number" => "420"
+          }
+        ],
+        "phx-F0Bfyj6AREQQNwAi" => [
+          %{
+            :phx_ref => "F0Bfy08QWAzf-gEF",
+            :phx_ref_prev => "F0Bfy0fqQkHf-gDl",
+            "name" => "Bob",
+            "number" => "440"
+          }
+        ]
+      }
 
-      display_state = DisplayState.from_users(users)
+      display_state = DisplayState.from_presences(presences)
       send(index_live.pid, display_state)
       assert render(index_live) =~ "Bob"
       assert render(index_live) =~ "440"

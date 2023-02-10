@@ -1,13 +1,13 @@
 defmodule QuickAverage.PresenceInterface do
   alias QuickAverage.{
     Presence,
-    Users
+    DisplayState
   }
 
   def list_users(room_id) do
     room_id
     |> Presence.list()
-    |> Users.from_presences()
+    |> DisplayState.from_presences()
   end
 
   def update(

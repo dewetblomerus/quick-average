@@ -40,17 +40,17 @@ defmodule QuickAverageWeb.AverageLive do
   def mount(%{"room_id" => room_id}, _session, socket) do
     PresenceInterface.track(room_id, socket)
     PresenceInterface.subscribe_display(room_id)
-    users = PresenceInterface.list_users(room_id)
+    %{users: users, average: average} = PresenceInterface.list_users(room_id)
     is_admin = length(users) < 2
 
     new_socket =
       assign(socket, %{
-        average: "Waiting",
+        average: average,
         changeset: User.changeset(%{}),
         is_admin: is_admin,
         name: "",
         room_id: room_id,
-        users: PresenceInterface.list_users(room_id)
+        users: users
       })
 
     {

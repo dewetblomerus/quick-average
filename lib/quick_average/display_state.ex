@@ -5,7 +5,23 @@ defmodule QuickAverage.DisplayState do
   defstruct [:users, :average]
   @enforce_keys [:users, :average]
 
-  def from_users(raw_users) do
+  def from_presences(presences) do
+    presences
+    |> Map.values()
+    |> Enum.map(&meta_to_user/1)
+    |> Enum.sort()
+    |> from_users()
+  end
+
+  defp meta_to_user([%{"name" => name, "number" => number} | _tail]) do
+    %{name: name, number: number}
+  end
+
+  defp meta_to_user(%{metas: meta}) do
+    meta_to_user(meta)
+  end
+
+  defp from_users(raw_users) do
     users =
       Enum.map(raw_users, fn user_params ->
         User.from_params(user_params)
