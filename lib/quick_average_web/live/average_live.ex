@@ -99,11 +99,8 @@ defmodule QuickAverageWeb.AverageLive do
   @impl true
   def handle_info(:clear_number, socket) do
     user_params = %{"name" => socket.assigns.name, "number" => nil}
-
     changeset = User.changeset(user_params)
-
     PresenceInterface.update(socket, user_params)
-
     new_socket = assign(socket, changeset: changeset)
 
     {:noreply, push_event(new_socket, "clear_number", %{})}
