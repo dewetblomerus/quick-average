@@ -22,7 +22,9 @@ defmodule QuickAverageWeb.AverageLive do
       <.input field={{f, :number}} type="number" label="Number" />
     </.simple_form>
 
-    <.button phx-click="clear_clicked">Clear Numbers</.button>
+    <%= if @is_admin do %>
+      <.button phx-click="clear_clicked">Clear Numbers</.button>
+    <% end %>
 
     <br />
     <h2>Average: <%= @average %></h2>
@@ -38,25 +40,54 @@ defmodule QuickAverageWeb.AverageLive do
   def mount(%{"room_id" => room_id}, _session, socket) do
     PresenceInterface.track(room_id, socket)
     PresenceInterface.subscribe_display(room_id)
+    users = PresenceInterface.list_users(room_id)
+    is_admin = length(users) < 2
 
-    {:ok,
-     assign(socket, %{
-       average: "Waiting",
-       changeset: User.changeset(%{}),
-       name: "",
-       room_id: room_id,
-       users: PresenceInterface.list_users(room_id)
-     })}
+    new_socket =
+      assign(socket, %{
+        average: "Waiting",
+        changeset: User.changeset(%{}),
+        is_admin: is_admin,
+        name: "",
+        room_id: room_id,
+        users: PresenceInterface.list_users(room_id)
+      })
+
+    {
+      :ok,
+      set_admin_token(new_socket, is_admin)
+    }
   end
 
+  def set_admin_token(socket, true) do
+    push_event(
+      socket,
+      "set_storage",
+      %{admin_token: generate_admin_token(socket.assigns.room_id)}
+    )
+  end
+
+  def set_admin_token(socket, false), do: socket
+
   @impl true
-  def handle_event("restore_user", %{"name" => name} = partial_params, socket) do
+  def handle_event(
+        "restore_user",
+        %{"name" => name, "admin_token" => admin_token} = partial_params,
+        socket
+      ) do
+    dbg(partial_params)
+
+    is_admin =
+      socket.assigns.is_admin ||
+        validate_admin_token(socket.assigns.room_id, admin_token)
+
     user_params = Map.put(partial_params, "number", nil)
     PresenceInterface.update(socket, user_params)
 
     {:noreply,
      assign(
        socket,
+       is_admin: is_admin,
        name: name,
        changeset: User.changeset(user_params)
      )}
@@ -104,5 +135,32 @@ defmodule QuickAverageWeb.AverageLive do
     new_socket = assign(socket, changeset: changeset)
 
     {:noreply, push_event(new_socket, "clear_number", %{})}
+  end
+
+  def generate_admin_token(room_id) do
+    Phoenix.Token.sign(
+      QuickAverageWeb.Endpoint,
+      "admin state",
+      "#{room_id}:true"
+    )
+  end
+
+  def validate_admin_token(room_id, token) do
+    admin_string = "#{room_id}:true"
+
+    admin_state =
+      Phoenix.Token.verify(
+        QuickAverageWeb.Endpoint,
+        "admin state",
+        token,
+        max_age: 86_400
+      )
+
+    dbg(admin_state)
+
+    case admin_state do
+      {:ok, ^admin_string} -> true
+      _ -> false
+    end
   end
 end
