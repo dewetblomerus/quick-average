@@ -1,4 +1,4 @@
-defmodule QuickAverage.PresenceInterface do
+defmodule QuickAverage.Presence.Interface do
   alias QuickAverage.{
     Presence,
     DisplayState

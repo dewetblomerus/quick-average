@@ -1,9 +1,10 @@
 defmodule QuickAverageWeb.AverageLive do
   use QuickAverageWeb, :live_view
 
+  alias QuickAverage.Presence.Interface, as: PresenceInterface
+
   alias QuickAverage.{
     DisplayState,
-    PresenceInterface,
     User
   }
 
