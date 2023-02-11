@@ -44,7 +44,7 @@ defmodule QuickAverage.Presence.InterfaceTest do
     end
   end
 
-  describe("track/2") do
+  describe("track/1") do
     setup :set_mimic_private
 
     test("gets tracked by the Presence") do
@@ -65,10 +65,10 @@ defmodule QuickAverage.Presence.InterfaceTest do
                  "socket_id",
                  %{"name" => "Anonymous", "number" => nil}
                ] ==
-                 Interface.track(
-                   "room_id",
-                   %{id: "socket_id", assigns: %{room_id: "room_id"}}
-                 )
+                 Interface.track(%{
+                   id: "socket_id",
+                   assigns: %{room_id: "room_id"}
+                 })
 
         send(parent_pid, :ok)
       end)

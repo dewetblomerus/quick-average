@@ -24,10 +24,10 @@ defmodule QuickAverage.Presence.Interface do
 
   defdelegate broadcast(room_id, message), to: Presence
 
-  def track(room_id, socket) do
+  def track(socket) do
     Presence.track(
       self(),
-      room_id,
+      socket.assigns.room_id,
       socket.id,
       %{"name" => "Anonymous", "number" => nil}
     )
