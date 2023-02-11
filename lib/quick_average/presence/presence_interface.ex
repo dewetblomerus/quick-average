@@ -29,7 +29,7 @@ defmodule QuickAverage.PresenceInterface do
       self(),
       room_id,
       socket.id,
-      %{"name" => "Anonymous", "number" => "waiting"}
+      %{"name" => "Anonymous", "number" => nil}
     )
   end
 
