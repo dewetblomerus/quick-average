@@ -77,8 +77,6 @@ defmodule QuickAverageWeb.AverageLive do
         %{"name" => name, "admin_token" => admin_token} = partial_params,
         socket
       ) do
-    dbg(partial_params)
-
     is_admin =
       socket.assigns.is_admin ||
         validate_admin_token(socket.assigns.room_id, admin_token)
@@ -157,8 +155,6 @@ defmodule QuickAverageWeb.AverageLive do
         token,
         max_age: 86_400
       )
-
-    dbg(admin_state)
 
     case admin_state do
       {:ok, ^admin_string} -> true
