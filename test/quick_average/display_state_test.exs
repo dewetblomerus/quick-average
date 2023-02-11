@@ -45,17 +45,6 @@ defmodule QuickAverage.DisplayStateTest do
     }
   }
 
-  @users [
-    %{
-      name: "Bob",
-      number: "99"
-    },
-    %{
-      name: "De Wet",
-      number: "9"
-    }
-  ]
-
   @display_state %DisplayState{
     users: [
       %User{
