@@ -1,7 +1,8 @@
 defmodule QuickAverage.Presence.Interface do
   alias QuickAverage.{
     DisplayState,
-    Presence
+    Presence,
+    User
   }
 
   def list_users(room_id) do
@@ -18,7 +19,7 @@ defmodule QuickAverage.Presence.Interface do
       self(),
       socket.assigns.room_id,
       socket.id,
-      user_params
+      %{user: User.from_params(user_params)}
     )
   end
 
@@ -29,7 +30,7 @@ defmodule QuickAverage.Presence.Interface do
       self(),
       socket.assigns.room_id,
       socket.id,
-      %{"name" => "Anonymous", "number" => nil}
+      %{user: User.from_params(%{"name" => "Anonymous", "number" => nil})}
     )
   end
 

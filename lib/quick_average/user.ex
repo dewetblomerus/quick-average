@@ -3,6 +3,7 @@ defmodule QuickAverage.User do
   import Ecto.Changeset
   alias QuickAverage.DisplayNumber
 
+  @primary_key false
   @fields [:name, :number]
 
   embedded_schema do

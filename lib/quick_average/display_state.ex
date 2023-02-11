@@ -13,29 +13,22 @@ defmodule QuickAverage.DisplayState do
     |> from_users()
   end
 
-  defp meta_to_user([%{"name" => name, "number" => number} | _tail]) do
-    %{name: name, number: number}
-  end
+  defp meta_to_user([%{user: %User{} = user} | _]), do: user
 
   defp meta_to_user(%{metas: meta}) do
     meta_to_user(meta)
   end
 
-  defp from_users(raw_users) do
-    users =
-      Enum.map(raw_users, fn user_params ->
-        User.from_params(user_params)
-      end)
-
+  defp from_users(users) do
     %__MODULE__{
       users: users,
       average: average(users)
     }
   end
 
-  def average([]), do: "Waiting"
+  defp average([]), do: "Waiting"
 
-  def average(users) do
+  defp average(users) do
     numbers = Enum.map(users, & &1.number)
 
     if Enum.all?(numbers, &is_number/1) do

@@ -1,6 +1,10 @@
 defmodule QuickAverageWeb.AverageLiveTest do
   use QuickAverageWeb.ConnCase
-  alias QuickAverage.DisplayState
+
+  alias QuickAverage.{
+    DisplayState,
+    User
+  }
 
   import Phoenix.LiveViewTest
 
@@ -38,16 +42,20 @@ defmodule QuickAverageWeb.AverageLiveTest do
           %{
             :phx_ref => "F0BfyHLOTZXf-gBl",
             :phx_ref_prev => "F0BfyHBOLAzf-gAE",
-            "name" => "De Wet",
-            "number" => "420"
+            user: %User{
+              name: "De Wet",
+              number: 420
+            }
           }
         ],
         "phx-F0Bfyj6AREQQNwAi" => [
           %{
             :phx_ref => "F0Bfy08QWAzf-gEF",
             :phx_ref_prev => "F0Bfy0fqQkHf-gDl",
-            "name" => "Bob",
-            "number" => "440"
+            user: %User{
+              name: "Bob",
+              number: 440
+            }
           }
         ]
       }

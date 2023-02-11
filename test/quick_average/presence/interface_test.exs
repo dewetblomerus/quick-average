@@ -1,6 +1,6 @@
 defmodule QuickAverage.Presence.InterfaceTest do
   use ExUnit.Case, async: true
-  alias QuickAverage.Presence
+  alias QuickAverage.{Presence, User}
   alias QuickAverage.Presence.Interface
   import Mimic
 
@@ -20,7 +20,8 @@ defmodule QuickAverage.Presence.InterfaceTest do
       end)
 
       parent_pid = self()
-      user_params = %{"name" => "De Wet", "number" => "42"}
+      raw_params = %{"name" => "De Wet", "number" => "42"}
+      presence_data = %{user: User.from_params(raw_params)}
 
       spawn_link(fn ->
         Presence |> allow(parent_pid, self())
@@ -30,11 +31,11 @@ defmodule QuickAverage.Presence.InterfaceTest do
                  my_pid,
                  "room_id",
                  "socket_id",
-                 user_params
+                 presence_data
                ] ==
                  Interface.update(
                    %{id: "socket_id", assigns: %{room_id: "room_id"}},
-                   user_params
+                   raw_params
                  )
 
         send(parent_pid, :ok)
@@ -55,6 +56,9 @@ defmodule QuickAverage.Presence.InterfaceTest do
 
       parent_pid = self()
 
+      raw_params = %{"name" => "Anonymous", "number" => nil}
+      presence_data = %{user: User.from_params(raw_params)}
+
       spawn_link(fn ->
         Presence |> allow(parent_pid, self())
         my_pid = self()
@@ -63,7 +67,7 @@ defmodule QuickAverage.Presence.InterfaceTest do
                  my_pid,
                  "room_id",
                  "socket_id",
-                 %{"name" => "Anonymous", "number" => nil}
+                 presence_data
                ] ==
                  Interface.track(%{
                    id: "socket_id",
