@@ -39,6 +39,7 @@ defmodule QuickAverage.MixProject do
       {:gettext, "~> 0.20"},
       {:heroicons, "~> 0.5"},
       {:jason, "~> 1.2"},
+      {:mimic, "~> 1.7", only: :test},
       {:mix_test_watch, "~> 1.1", only: :dev, runtime: false},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.0"},
