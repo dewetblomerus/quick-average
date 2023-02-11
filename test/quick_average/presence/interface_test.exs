@@ -1,7 +1,7 @@
 defmodule QuickAverage.Presence.InterfaceTest do
   use ExUnit.Case, async: true
-  alias QuickAverage.Presence.Interface
   alias QuickAverage.Presence
+  alias QuickAverage.Presence.Interface
   import Mimic
 
   describe("list_users/1") do
