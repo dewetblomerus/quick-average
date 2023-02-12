@@ -2,22 +2,27 @@ defmodule QuickAverage.UserTest do
   alias QuickAverage.User
   use ExUnit.Case, async: true
 
-  def params(number \\ 5) do
-    %{name: "De Wet", number: number}
-  end
-
   describe("from_params/1") do
     test("correctly formatted user is unchanged") do
-      assert %User{name: "De Wet", number: 5} == params() |> User.from_params()
+      assert %User{name: "De Wet", number: 5, only_viewing: false} ==
+               User.from_params(%{
+                 name: "De Wet",
+                 number: 5,
+                 only_viewing: false
+               })
     end
 
     test("string keys are atomized") do
-      assert %User{name: "De Wet", number: 5.5555} ==
-               User.from_params(%{"name" => "De Wet", "number" => "5.5555"})
+      assert %User{name: "De Wet", number: 5.5555, only_viewing: true} ==
+               User.from_params(%{
+                 "name" => "De Wet",
+                 "number" => "5.5555",
+                 "only_viewing" => "true"
+               })
     end
 
-    test("works with only a name") do
-      assert %User{name: "De Wet", number: nil} ==
+    test("have sensible defaults when only a name is given") do
+      assert %User{name: "De Wet", number: nil, only_viewing: false} ==
                User.from_params(%{"name" => "De Wet"})
     end
   end

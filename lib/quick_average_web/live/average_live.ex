@@ -21,6 +21,7 @@ defmodule QuickAverageWeb.AverageLive do
     >
       <.input field={{f, :name}} type="text" label="Name" />
       <.input field={{f, :number}} type="number" label="Number" />
+      <.input field={{f, :only_viewing}} type="checkbox" label="Only Viewing" />
     </.simple_form>
 
     <%= if @is_admin do %>
@@ -45,7 +46,8 @@ defmodule QuickAverageWeb.AverageLive do
       assign(socket, %{
         room_id: room_id,
         changeset: User.changeset(%{}),
-        name: ""
+        name: "",
+        only_viewing: false
       })
 
     PresenceInterface.track(trackable_socket)
@@ -102,7 +104,10 @@ defmodule QuickAverageWeb.AverageLive do
   @impl true
   def handle_event(
         "form_update",
-        %{"user" => %{"name" => name} = user_params},
+        %{
+          "user" =>
+            %{"name" => name, "only_viewing" => only_viewing} = user_params
+        },
         socket
       ) do
     PresenceInterface.update(socket, user_params)
@@ -116,7 +121,8 @@ defmodule QuickAverageWeb.AverageLive do
       assign(
         socket,
         changeset: changeset,
-        name: name
+        name: name,
+        only_viewing: only_viewing
       )
 
     {:noreply, push_event(new_socket, "set_storage", %{name: name})}
@@ -135,7 +141,12 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def handle_info(:clear_number, socket) do
-    user_params = %{"name" => socket.assigns.name, "number" => nil}
+    user_params = %{
+      "name" => socket.assigns.name,
+      "number" => nil,
+      "only_viewing" => socket.assigns.only_viewing
+    }
+
     changeset = User.changeset(user_params)
     PresenceInterface.update(socket, user_params)
     new_socket = assign(socket, changeset: changeset)

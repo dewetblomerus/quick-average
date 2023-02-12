@@ -3,11 +3,12 @@ defmodule QuickAverage.User do
   import Ecto.Changeset
 
   @primary_key false
-  @fields [:name, :number]
+  @fields [:name, :number, :only_viewing]
 
   embedded_schema do
     field(:name, :string)
     field(:number, :float)
+    field(:only_viewing, :boolean, default: false)
   end
 
   @doc false

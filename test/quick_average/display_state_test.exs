@@ -7,11 +7,13 @@ defmodule QuickAverage.DisplayStateTest do
   @users [
     %User{
       name: "Bob",
-      number: 99
+      number: 99,
+      only_viewing: false
     },
     %User{
       name: "De Wet",
-      number: 9
+      number: 9,
+      only_viewing: false
     }
   ]
 
@@ -37,6 +39,42 @@ defmodule QuickAverage.DisplayStateTest do
              |> Factory.presence_list_for()
              |> DisplayState.from_presences() ==
                @display_state
+    end
+  end
+
+  describe(
+    "from_presences/1 with someone viewing and all other numbers present"
+  ) do
+    setup do
+      input_users =
+        [
+          %User{name: "Manager", number: nil, only_viewing: true} | @users
+        ]
+        |> Enum.sort()
+
+      display_users =
+        [
+          %User{name: "Manager", number: "Viewing", only_viewing: true} | @users
+        ]
+        |> Enum.sort()
+
+      %{
+        input_users: input_users,
+        display_users: display_users
+      }
+    end
+
+    test("generates display state from presences", %{
+      input_users: input_users,
+      display_users: display_users
+    }) do
+      assert input_users
+             |> Factory.presences_for()
+             |> DisplayState.from_presences() ==
+               %DisplayState{
+                 users: display_users,
+                 average: 54
+               }
     end
   end
 
