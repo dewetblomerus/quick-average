@@ -4,9 +4,9 @@ defmodule QuickAverage.Presence.InterfaceTest do
   alias QuickAverage.Presence.Interface
   import Mimic
 
-  describe("list_users/1") do
+  describe("display_state/1") do
     test("returns display state for a room_id") do
-      assert %QuickAverage.DisplayState{} = Interface.list_users("5")
+      assert %QuickAverage.DisplayState{} = Interface.display_state("5")
     end
   end
 

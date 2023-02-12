@@ -59,7 +59,7 @@ defmodule QuickAverageWeb.AverageLive do
       })
 
     PresenceInterface.track(trackable_socket)
-    %{users: users, average: average} = PresenceInterface.list_users(room_id)
+    %{users: users, average: average} = PresenceInterface.display_state(room_id)
     is_admin = length(users) < 2
 
     new_socket =

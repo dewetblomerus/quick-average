@@ -5,7 +5,7 @@ defmodule QuickAverage.Presence.Interface do
     User
   }
 
-  def list_users(room_id) do
+  def display_state(room_id) do
     room_id
     |> Presence.list()
     |> DisplayState.from_presences()
@@ -22,8 +22,6 @@ defmodule QuickAverage.Presence.Interface do
       %{user: User.from_params(user_params)}
     )
   end
-
-  defdelegate broadcast(room_id, message), to: Presence
 
   def track(socket) do
     Presence.track(
