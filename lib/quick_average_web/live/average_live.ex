@@ -20,7 +20,14 @@ defmodule QuickAverageWeb.AverageLive do
       phx-submit="save"
     >
       <.input field={{f, :name}} type="text" label="Name" />
-      <.input field={{f, :number}} type="number" label="Number" />
+
+      <.input
+        field={{f, :number}}
+        type="number"
+        label="Number"
+        disabled={parse_bool(@only_viewing)}
+      />
+
       <.input field={{f, :only_viewing}} type="checkbox" label="Only Viewing" />
     </.simple_form>
 
@@ -106,16 +113,25 @@ defmodule QuickAverageWeb.AverageLive do
         "form_update",
         %{
           "user" =>
-            %{"name" => name, "only_viewing" => only_viewing} = user_params
+            %{"name" => name, "only_viewing" => only_viewing_input} =
+              user_params
         },
         socket
       ) do
     PresenceInterface.update(socket, user_params)
+    only_viewing = parse_bool(only_viewing_input)
+
+    action =
+      if only_viewing do
+        nil
+      else
+        :validate
+      end
 
     changeset =
       user_params
       |> User.changeset()
-      |> Map.put(:action, :validate)
+      |> Map.put(:action, action)
 
     new_socket =
       assign(
@@ -178,4 +194,8 @@ defmodule QuickAverageWeb.AverageLive do
       _ -> false
     end
   end
+
+  def parse_bool("false"), do: false
+  def parse_bool("true"), do: true
+  def parse_bool(input), do: !!input
 end

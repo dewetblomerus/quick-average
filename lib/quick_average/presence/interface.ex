@@ -13,7 +13,7 @@ defmodule QuickAverage.Presence.Interface do
 
   def update(
         socket,
-        %{"name" => _name, "number" => _number} = user_params
+        %{"name" => _name} = user_params
       ) do
     Presence.update(
       self(),
