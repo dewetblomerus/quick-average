@@ -33,11 +33,4 @@ defmodule QuickAverage.Presence.Interface do
       %{user: User.from_params(%{"name" => "Anonymous", "number" => nil})}
     )
   end
-
-  def subscribe_display(room_id) do
-    Phoenix.PubSub.subscribe(
-      QuickAverage.PubSub,
-      Presence.display_topic(room_id)
-    )
-  end
 end

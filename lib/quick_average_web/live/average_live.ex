@@ -2,6 +2,7 @@ defmodule QuickAverageWeb.AverageLive do
   use QuickAverageWeb, :live_view
 
   alias QuickAverage.Presence.Interface, as: PresenceInterface
+  alias QuickAverage.PubSub.Interface, as: PubSubInterface
 
   alias QuickAverage.{
     DisplayState,
@@ -47,7 +48,7 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def mount(%{"room_id" => room_id}, _session, socket) do
-    PresenceInterface.subscribe_display(room_id)
+    PubSubInterface.subscribe_display(room_id)
 
     trackable_socket =
       assign(socket, %{
@@ -146,7 +147,7 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def handle_event("clear_clicked", _params, socket) do
-    PresenceInterface.broadcast(socket.assigns.room_id, :clear_number)
+    PubSubInterface.broadcast(socket.assigns.room_id, :clear_number)
     {:noreply, socket}
   end
 

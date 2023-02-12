@@ -1,5 +1,6 @@
 defmodule QuickAverage.Presence do
   alias QuickAverage.DisplayState
+  alias QuickAverage.PubSub.Interface, as: PubSubInterface
 
   use Phoenix.Presence,
     otp_app: :my_app,
@@ -15,22 +16,8 @@ defmodule QuickAverage.Presence do
       presences
       |> DisplayState.from_presences()
 
-    broadcast(room_id, display_state)
+    PubSubInterface.broadcast(room_id, display_state)
 
     {:ok, state}
-  end
-
-  def display_topic(room_id) do
-    "#{room_id}_display"
-  end
-
-  def broadcast(room_id, message) do
-    topic = display_topic(room_id)
-
-    Phoenix.PubSub.local_broadcast(
-      QuickAverage.PubSub,
-      topic,
-      message
-    )
   end
 end
