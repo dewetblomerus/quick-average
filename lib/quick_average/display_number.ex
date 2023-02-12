@@ -1,23 +1,4 @@
 defmodule QuickAverage.DisplayNumber do
-  def parse(nil) do
-    "Waiting"
-  end
-
-  def parse("") do
-    "Waiting"
-  end
-
-  def parse("Waiting") do
-    "Waiting"
-  end
-
-  def parse(number) when is_binary(number) do
-    case Float.parse(number) do
-      {float, ""} -> parse(float)
-      _ -> "Waiting"
-    end
-  end
-
   def parse(number) when is_integer(number), do: number
 
   def parse(number) when is_float(number) do
@@ -27,7 +8,7 @@ defmodule QuickAverage.DisplayNumber do
   end
 
   defp integerize(number) when is_float(number) do
-    if number && number == Float.round(number) do
+    if number && number == round(number) do
       round(number)
     else
       number

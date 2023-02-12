@@ -27,7 +27,7 @@ defmodule Support.Factory do
     end)
   end
 
-  defp random_ref() do
+  defp random_ref do
     "phx-#{Enum.random(1000..9999)}"
   end
 end
