@@ -77,13 +77,13 @@ defmodule QuickAverage.RoomManager do
 
   @impl true
   def handle_call(:toggle_reveal, _from, state) do
-    new_state = %{state | reveal: !state.reveal}
+    new_state = %{state | reveal: !state.reveal, version: state.version + 1}
     {:reply, :ok, new_state}
   end
 
   @impl true
   def handle_call({:set_reveal, false}, _from, state) do
-    new_state = %{state | reveal: false}
+    new_state = %{state | reveal: false, version: state.version + 1}
     {:reply, :ok, new_state}
   end
 
