@@ -145,13 +145,18 @@ defmodule QuickAverageWeb.AverageLive do
         name: name,
         only_viewing: only_viewing
       )
+      |> clear_flash()
 
     {:noreply, push_event(new_socket, "set_storage", %{name: name})}
   end
 
   @impl true
   def handle_event("clear_clicked", _params, socket) do
-    PubSubInterface.broadcast(socket.assigns.room_id, :clear_number)
+    PubSubInterface.broadcast(
+      socket.assigns.room_id,
+      {:clear_number, socket.assigns.name}
+    )
+
     {:noreply, socket}
   end
 
@@ -161,7 +166,7 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   @impl true
-  def handle_info(:clear_number, socket) do
+  def handle_info({:clear_number, clearer_name}, socket) do
     user_params = %{
       "name" => socket.assigns.name,
       "number" => nil,
@@ -170,7 +175,10 @@ defmodule QuickAverageWeb.AverageLive do
 
     changeset = User.changeset(user_params)
     PresenceInterface.update(socket, user_params)
-    new_socket = assign(socket, changeset: changeset)
+
+    new_socket =
+      assign(socket, changeset: changeset)
+      |> put_flash(:info, "Numbers cleared by #{clearer_name}")
 
     {:noreply, push_event(new_socket, "clear_number", %{})}
   end
