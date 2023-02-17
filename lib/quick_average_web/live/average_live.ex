@@ -4,8 +4,12 @@ defmodule QuickAverageWeb.AverageLive do
   alias QuickAverage.Presence.Interface, as: PresenceInterface
   alias QuickAverage.PubSub.Interface, as: PubSubInterface
 
+  alias QuickAverage.RoomManager.SupervisorInterface,
+    as: ManagerSupervisor
+
   alias QuickAverage.{
     DisplayState,
+    RoomManager,
     User
   }
 
@@ -48,6 +52,7 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def mount(%{"room_id" => room_id}, _session, socket) do
+    ManagerSupervisor.create(room_id)
     PubSubInterface.subscribe_display(room_id)
 
     trackable_socket =
@@ -59,8 +64,9 @@ defmodule QuickAverageWeb.AverageLive do
       })
 
     PresenceInterface.track(trackable_socket)
-    %{users: users, average: average} = PresenceInterface.display_state(room_id)
-    is_admin = length(users) < 2
+
+    %{users: users, average: average} = RoomManager.get_display_state(room_id)
+    is_admin = length(users) < 1
 
     new_socket =
       assign(trackable_socket, %{
@@ -68,8 +74,6 @@ defmodule QuickAverageWeb.AverageLive do
         users: users,
         average: average
       })
-
-    PresenceInterface.track(new_socket)
 
     {
       :ok,

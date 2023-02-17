@@ -13,6 +13,8 @@ defmodule QuickAverage.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: QuickAverage.PubSub},
       QuickAverage.Presence,
+      {Registry, keys: :unique, name: QuickAverage.Registry},
+      {DynamicSupervisor, name: QuickAverage.RoomManagerSupervisor},
       # Start Finch
       {Finch, name: QuickAverage.Finch},
       # Start the Endpoint (http/https)

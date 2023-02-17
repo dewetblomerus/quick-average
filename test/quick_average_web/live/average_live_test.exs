@@ -20,7 +20,7 @@ defmodule QuickAverageWeb.AverageLiveTest do
     end
 
     test "renders validations", %{conn: conn} do
-      {:ok, index_live, _html} = live(conn, ~p"/5")
+      {:ok, index_live, _html} = live(conn, ~p"/7")
 
       assert index_live
              |> form("#user-form", user: %{name: nil, number: "9"})

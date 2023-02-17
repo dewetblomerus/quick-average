@@ -1,5 +1,5 @@
 defmodule QuickAverage.Presence do
-  alias QuickAverage.DisplayState
+  alias QuickAverage.RoomManager
   alias QuickAverage.PubSub.Interface, as: PubSubInterface
 
   use Phoenix.Presence,
@@ -12,11 +12,7 @@ defmodule QuickAverage.Presence do
   end
 
   def handle_metas(room_id, _joins_leaves, presences, state) do
-    display_state =
-      presences
-      |> DisplayState.from_presences()
-
-    PubSubInterface.broadcast(room_id, display_state)
+    RoomManager.set_presences(room_id, presences)
 
     {:ok, state}
   end

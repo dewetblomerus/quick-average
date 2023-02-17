@@ -11,6 +11,8 @@ defmodule QuickAverage.Presence.Interface do
     |> DisplayState.from_presences()
   end
 
+  defdelegate list(room_id), to: Presence
+
   def update(
         socket,
         %{"name" => _name} = user_params
