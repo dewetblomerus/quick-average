@@ -6,7 +6,7 @@ defmodule QuickAverage.RoomManager do
   alias QuickAverage.PubSub.Interface, as: PubSubInterface
   alias QuickAverage.RoomManager.SupervisorInterface
 
-  @refresh_delay 200
+  @refresh_delay 50
 
   def start_link(room_id) when is_binary(room_id) do
     GenServer.start_link(__MODULE__, room_id, name: name(room_id))
@@ -45,7 +45,8 @@ defmodule QuickAverage.RoomManager do
           reveal: reveal,
           presences: presences
         } = state
-      ) do
+      )
+      when version > display_version do
     %DisplayState{users: users} =
       display_state =
       DisplayState.from_input_state(%{presences: presences, reveal: reveal})
