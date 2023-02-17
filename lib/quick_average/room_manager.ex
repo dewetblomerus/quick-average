@@ -42,7 +42,7 @@ defmodule QuickAverage.RoomManager do
       display_state = DisplayState.from_presences(state.presences)
 
     if length(users) == 0 do
-      IO.puts("No users left, stopping RoomManager for #{state.room_id} 🤖")
+      Logger.info("No users left, stopping RoomManager for #{state.room_id} 🤖")
       SupervisorInterface.delete(self())
     end
 
