@@ -55,30 +55,32 @@ defmodule QuickAverageWeb.AverageLive do
     ManagerSupervisor.create(room_id)
     PubSubInterface.subscribe_display(room_id)
 
-    trackable_socket =
+    new_socket =
       assign(socket, %{
         room_id: room_id,
         changeset: User.changeset(%{}),
         name: "",
-        only_viewing: false
+        only_viewing: false,
+        is_admin: false,
+        users: [],
+        average: "Waiting"
       })
 
-    PresenceInterface.track(trackable_socket)
-
-    %{users: users, average: average} = RoomManager.get_display_state(room_id)
-    is_admin = length(users) < 1
-
-    new_socket =
-      assign(trackable_socket, %{
-        is_admin: is_admin,
-        users: users,
-        average: average
-      })
+    PresenceInterface.track(new_socket)
 
     {
       :ok,
-      set_admin_token(new_socket, is_admin)
+      new_socket
     }
+  end
+
+  @impl true
+  def handle_params(_params, _uri, socket) do
+    %{users: users} = RoomManager.get_display_state(socket.assigns.room_id)
+    is_admin = length(users) < 1
+
+    new_socket = assign(socket, is_admin: is_admin)
+    {:noreply, set_admin_token(new_socket, is_admin)}
   end
 
   def set_admin_token(socket, true) do
