@@ -76,25 +76,6 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   @impl true
-  def handle_params(_params, _uri, socket) do
-    %{users: users} = RoomManager.get_display_state(socket.assigns.room_id)
-    is_admin = length(users) < 1
-
-    new_socket = assign(socket, is_admin: is_admin)
-    {:noreply, set_admin_token(new_socket, is_admin)}
-  end
-
-  def set_admin_token(socket, true) do
-    push_event(
-      socket,
-      "set_storage",
-      %{admin_token: generate_admin_token(socket.assigns.room_id)}
-    )
-  end
-
-  def set_admin_token(socket, false), do: socket
-
-  @impl true
   def handle_event(
         "restore_user",
         %{"name" => name, "admin_token" => admin_token} = partial_params,
@@ -174,7 +155,24 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def handle_info(%DisplayState{users: users, average: average}, socket) do
-    {:noreply, assign(socket, %{users: users, average: average})}
+    is_admin = socket.assigns.is_admin || is_alone?(users)
+
+    if is_admin do
+      send(self(), :persist_admin)
+    end
+
+    {:noreply,
+     assign(socket, %{users: users, average: average, is_admin: is_admin})}
+  end
+
+  @impl true
+  def handle_info(:persist_admin, socket) do
+    {:noreply,
+     push_event(
+       socket,
+       "set_storage",
+       %{admin_token: generate_admin_token(socket.assigns.room_id)}
+     )}
   end
 
   @impl true
@@ -194,6 +192,8 @@ defmodule QuickAverageWeb.AverageLive do
 
     {:noreply, push_event(new_socket, "clear_number", %{})}
   end
+
+  def is_alone?(users), do: length(users) < 2
 
   def generate_admin_token(room_id) do
     Phoenix.Token.sign(
