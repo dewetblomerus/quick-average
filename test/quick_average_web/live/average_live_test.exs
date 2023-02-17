@@ -62,4 +62,16 @@ defmodule QuickAverageWeb.AverageLiveTest do
       assert render(index_live) =~ "430"
     end
   end
+
+  test "shows and clears a flash of who cleared the numbers", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/9")
+
+    send(view.pid, {:clear_number, "De Wet 🔥"})
+
+    assert render(view) =~ "Numbers cleared by De Wet 🔥"
+
+    refute view
+           |> form("#user-form", user: @create_attrs)
+           |> render_change() =~ "Numbers cleared by De Wet 🔥"
+  end
 end
