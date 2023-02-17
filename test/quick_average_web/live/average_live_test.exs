@@ -51,8 +51,8 @@ defmodule QuickAverageWeb.AverageLiveTest do
 
       display_state =
         users
-        |> Factory.presences_for()
-        |> DisplayState.from_presences()
+        |> Factory.input_state_for()
+        |> DisplayState.from_input_state()
 
       send(index_live.pid, display_state)
       assert render(index_live) =~ "Bob"

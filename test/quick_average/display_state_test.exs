@@ -29,21 +29,21 @@ defmodule QuickAverage.DisplayStateTest do
 
     test("generates display state from presences", %{users: users}) do
       assert users
-             |> Factory.presences_for()
-             |> DisplayState.from_presences() ==
+             |> Factory.input_state_for()
+             |> DisplayState.from_input_state() ==
                @display_state
     end
 
     test("generates display state from a presence_list", %{users: users}) do
       assert users
-             |> Factory.presence_list_for()
-             |> DisplayState.from_presences() ==
+             |> Factory.input_state_for()
+             |> DisplayState.from_input_state() ==
                @display_state
     end
   end
 
   describe(
-    "from_presences/1 with someone viewing and all other numbers present"
+    "from_input_state/1 with someone viewing and all other numbers present"
   ) do
     setup do
       input_users =
@@ -69,8 +69,8 @@ defmodule QuickAverage.DisplayStateTest do
       display_users: display_users
     }) do
       assert input_users
-             |> Factory.presences_for()
-             |> DisplayState.from_presences() ==
+             |> Factory.input_state_for()
+             |> DisplayState.from_input_state() ==
                %DisplayState{
                  users: display_users,
                  average: 54
@@ -80,6 +80,44 @@ defmodule QuickAverage.DisplayStateTest do
 
   describe("from_presences/1 without all numbers present") do
     setup do
+      input_state =
+        [
+          %QuickAverage.User{name: "De Wet", number: 42},
+          %QuickAverage.User{name: "Nildecided", number: nil},
+          %QuickAverage.User{name: "Undecided", number: ""}
+        ]
+        |> Factory.input_state_for()
+
+      %{input_state: input_state}
+    end
+
+    test("the average is Waiting", %{
+      input_state: input_state
+    }) do
+      assert input_state
+             |> DisplayState.from_input_state()
+             |> Map.get(:average) ==
+               "Waiting"
+    end
+
+    test("the users with missing numbers displays a Waiting number", %{
+      input_state: input_state
+    }) do
+      expected_users = [
+        %QuickAverage.User{name: "De Wet", number: "Hidden"},
+        %QuickAverage.User{name: "Nildecided", number: "Waiting"},
+        %QuickAverage.User{name: "Undecided", number: "Waiting"}
+      ]
+
+      assert input_state
+             |> DisplayState.from_input_state()
+             |> Map.get(:users) ==
+               expected_users
+    end
+  end
+
+  describe("from_presences/1 without all numbers present but reveal clicked") do
+    setup do
       presences =
         [
           %QuickAverage.User{name: "De Wet", number: 42},
@@ -88,31 +126,54 @@ defmodule QuickAverage.DisplayStateTest do
         ]
         |> Factory.presences_for()
 
-      %{presences: presences}
+      %{input_state: %{presences: presences, reveal: true}}
     end
 
     test("the average is Waiting", %{
-      presences: presences
+      input_state: input_state
     }) do
-      assert presences
-             |> DisplayState.from_presences()
+      assert input_state
+             |> DisplayState.from_input_state()
              |> Map.get(:average) ==
-               "Waiting"
+               42
     end
 
     test("the users with missing numbers displays a Waiting number", %{
-      presences: presences
+      input_state: input_state
     }) do
       expected_users = [
-        %QuickAverage.User{name: "De Wet", number: "Hidden"},
+        %QuickAverage.User{name: "De Wet", number: 42},
         %QuickAverage.User{name: "Nildecided", number: "Waiting"},
         %QuickAverage.User{name: "Undecided", number: "Waiting"}
       ]
 
-      assert presences
-             |> DisplayState.from_presences()
+      assert input_state
+             |> DisplayState.from_input_state()
              |> Map.get(:users) ==
                expected_users
+    end
+  end
+
+  describe("from_presences/1 without no numbers present but reveal clicked") do
+    setup do
+      presences =
+        [
+          %QuickAverage.User{name: "De Wet", number: nil},
+          %QuickAverage.User{name: "Nildecided", number: nil},
+          %QuickAverage.User{name: "Undecided", number: nil}
+        ]
+        |> Factory.presences_for()
+
+      %{input_state: %{presences: presences, reveal: true}}
+    end
+
+    test("the average is Waiting", %{
+      input_state: input_state
+    }) do
+      assert input_state
+             |> DisplayState.from_input_state()
+             |> Map.get(:average) ==
+               "Waiting"
     end
   end
 end

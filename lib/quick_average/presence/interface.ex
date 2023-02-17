@@ -5,12 +5,6 @@ defmodule QuickAverage.Presence.Interface do
     User
   }
 
-  def display_state(room_id) do
-    room_id
-    |> Presence.list()
-    |> DisplayState.from_presences()
-  end
-
   defdelegate list(room_id), to: Presence
 
   def update(

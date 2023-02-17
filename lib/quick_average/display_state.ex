@@ -5,13 +5,13 @@ defmodule QuickAverage.DisplayState do
   @enforce_keys [:users, :average]
   defstruct [:users, :average]
 
-  def from_presences(presences) do
+  def from_input_state(%{presences: presences, reveal: reveal}) do
     presences
     |> Map.values()
     |> Enum.map(&metas_to_user/1)
     |> Enum.sort()
     |> determine_active_users()
-    |> determine_should_reveal()
+    |> determine_should_reveal(reveal)
     |> update_user_display_numbers()
     |> determine_average()
   end
@@ -28,7 +28,14 @@ defmodule QuickAverage.DisplayState do
     %{users: users, active_users: active_users}
   end
 
-  defp determine_should_reveal(%{users: users, active_users: active_users}) do
+  defp determine_should_reveal(state, true) do
+    Map.put(state, :reveal, true)
+  end
+
+  defp determine_should_reveal(
+         %{users: users, active_users: active_users},
+         false
+       ) do
     should_reveal = should_reveal?(active_users)
     %{users: users, reveal: should_reveal, active_users: active_users}
   end
@@ -65,7 +72,7 @@ defmodule QuickAverage.DisplayState do
   defp display_number(%{reveal: false, number: number}) when is_number(number),
     do: "Hidden"
 
-  defp display_number(%{reveal: false}), do: "Waiting"
+  defp display_number(_), do: "Waiting"
 
   defp determine_average(%{users: users, reveal: false}) do
     %__MODULE__{
@@ -88,12 +95,12 @@ defmodule QuickAverage.DisplayState do
   defp average([]), do: "Waiting"
 
   defp average(users) do
-    numbers = Enum.map(users, & &1.number)
+    numbers = Enum.map(users, & &1.number) |> Enum.filter(&is_number/1)
 
-    if Enum.all?(numbers, &is_number/1) do
-      DisplayNumber.parse(Enum.sum(numbers) / Enum.count(numbers))
-    else
+    if Enum.empty?(numbers) do
       "Waiting"
+    else
+      DisplayNumber.parse(Enum.sum(numbers) / Enum.count(numbers))
     end
   end
 end

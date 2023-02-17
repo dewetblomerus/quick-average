@@ -1,6 +1,6 @@
 defmodule QuickAverage.Presence do
-  alias QuickAverage.RoomManager
   alias QuickAverage.PubSub.Interface, as: PubSubInterface
+  alias QuickAverage.RoomManager
 
   use Phoenix.Presence,
     otp_app: :my_app,

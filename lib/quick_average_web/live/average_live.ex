@@ -38,6 +38,7 @@ defmodule QuickAverageWeb.AverageLive do
 
     <%= if @is_admin do %>
       <.button phx-click="clear_clicked">Clear Numbers</.button>
+      <.button phx-click="reveal_clicked">Reveal</.button>
     <% end %>
 
     <br />
@@ -158,6 +159,15 @@ defmodule QuickAverageWeb.AverageLive do
       socket.assigns.room_id,
       {:clear_number, socket.assigns.name}
     )
+
+    RoomManager.set_reveal(socket.assigns.room_id, false)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("reveal_clicked", _params, socket) do
+    RoomManager.toggle_reveal(socket.assigns.room_id)
 
     {:noreply, socket}
   end

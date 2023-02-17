@@ -1,13 +1,12 @@
 defmodule QuickAverage.RoomManager do
   require Logger
   use GenServer
-  alias QuickAverage.RoomManager.SupervisorInterface
+  alias QuickAverage.DisplayState
   alias QuickAverage.Presence.Interface, as: PresenceInterface
   alias QuickAverage.PubSub.Interface, as: PubSubInterface
-  alias QuickAverage.DisplayState
+  alias QuickAverage.RoomManager.SupervisorInterface
 
-  @refresh_delay 50
-  @idle_seconds_before_stop 10
+  @refresh_delay 200
 
   def start_link(room_id) when is_binary(room_id) do
     GenServer.start_link(__MODULE__, room_id, name: name(room_id))
@@ -17,11 +16,16 @@ defmodule QuickAverage.RoomManager do
   def init(room_id) do
     Logger.info("Starting RoomManager for #{room_id} 🤖")
     presences = PresenceInterface.list(room_id)
+    reveal = false
+
+    display_state =
+      DisplayState.from_input_state(%{presences: presences, reveal: reveal})
 
     state = %{
-      display_state: DisplayState.from_presences(presences),
+      display_state: display_state,
       room_id: room_id,
       presences: presences,
+      reveal: reveal,
       start_time: now(),
       version: 0,
       display_version: 0
@@ -35,13 +39,18 @@ defmodule QuickAverage.RoomManager do
   @impl true
   def handle_info(
         :update,
-        %{version: version, display_version: display_version} = state
-      )
-      when version > display_version do
+        %{
+          version: version,
+          display_version: display_version,
+          reveal: reveal,
+          presences: presences
+        } = state
+      ) do
     %DisplayState{users: users} =
-      display_state = DisplayState.from_presences(state.presences)
+      display_state =
+      DisplayState.from_input_state(%{presences: presences, reveal: reveal})
 
-    if length(users) == 0 do
+    if Enum.empty?(users) do
       Logger.info("No users left, stopping RoomManager for #{state.room_id} 🤖")
       SupervisorInterface.delete(self())
     end
@@ -63,6 +72,18 @@ defmodule QuickAverage.RoomManager do
   @impl true
   def handle_call(:display_state, _from, state) do
     {:reply, state.display_state, state}
+  end
+
+  @impl true
+  def handle_call(:toggle_reveal, _from, state) do
+    new_state = %{state | reveal: !state.reveal}
+    {:reply, :ok, new_state}
+  end
+
+  @impl true
+  def handle_call({:set_reveal, false}, _from, state) do
+    new_state = %{state | reveal: false}
+    {:reply, :ok, new_state}
   end
 
   @impl true
@@ -88,6 +109,20 @@ defmodule QuickAverage.RoomManager do
     GenServer.cast(
       name(room_id),
       %{presences: presences}
+    )
+  end
+
+  def toggle_reveal(room_id) do
+    GenServer.call(
+      name(room_id),
+      :toggle_reveal
+    )
+  end
+
+  def set_reveal(room_id, false) do
+    GenServer.call(
+      name(room_id),
+      {:set_reveal, false}
     )
   end
 
