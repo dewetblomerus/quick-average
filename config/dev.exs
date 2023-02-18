@@ -1,5 +1,9 @@
 import Config
 
+config :quick_average,
+  username: "asdf",
+  password: "asdf"
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
@@ -53,9 +57,6 @@ config :quick_average, QuickAverageWeb.Endpoint,
       ~r"lib/quick_average_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
-
-# Enable dev routes for dashboard and mailbox
-config :quick_average, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"

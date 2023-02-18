@@ -21,6 +21,10 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
+  config :quick_average,
+    username: System.fetch_env!("ADMIN_USERNAME"),
+    password: System.fetch_env!("ADMIN_PASSWORD")
+
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
   # want to use a different value for prod and you most likely don't want

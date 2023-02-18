@@ -50,6 +50,11 @@ defmodule QuickAverage.RoomManager do
         } = state
       )
       when version > display_version do
+    :telemetry.execute([:quick_average, :update_display], %{
+      event: "update_display",
+      room_id: state.room_id
+    })
+
     %DisplayState{users: users} =
       display_state =
       DisplayState.from_input_state(%{
@@ -105,6 +110,11 @@ defmodule QuickAverage.RoomManager do
 
   @impl true
   def handle_cast(%{presences: presences}, state) do
+    :telemetry.execute([:quick_average, :presences_received], %{
+      event: "presences_received",
+      room_id: state.room_id
+    })
+
     new_state =
       state
       |> Map.update!(:version, &(&1 + 1))

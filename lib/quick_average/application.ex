@@ -19,6 +19,7 @@ defmodule QuickAverage.Application do
       {Finch, name: QuickAverage.Finch},
       # Start the Endpoint (http/https)
       QuickAverageWeb.Endpoint
+
       # Start a worker by calling: QuickAverage.Worker.start_link(arg)
       # {QuickAverage.Worker, arg}
     ]
