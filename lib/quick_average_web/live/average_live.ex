@@ -38,7 +38,9 @@ defmodule QuickAverageWeb.AverageLive do
 
     <%= if @is_admin do %>
       <.button phx-click="clear_clicked">Clear Numbers</.button>
-      <.button phx-click="reveal_clicked">Reveal</.button>
+      <.button phx-click="reveal_clicked">
+        <%= reveal_text(@manual_reveal?) %>
+      </.button>
     <% end %>
 
     <br />
@@ -58,13 +60,14 @@ defmodule QuickAverageWeb.AverageLive do
 
     new_socket =
       assign(socket, %{
-        room_id: room_id,
+        average: "Waiting",
         changeset: User.changeset(%{}),
+        is_admin: false,
+        manual_reveal?: false,
         name: "",
         only_viewing: false,
-        is_admin: false,
-        users: [],
-        average: "Waiting"
+        room_id: room_id,
+        users: []
       })
 
     PresenceInterface.track(new_socket)
@@ -148,7 +151,7 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def handle_event("reveal_clicked", _params, socket) do
-    RoomManager.toggle_reveal(socket.assigns.room_id)
+    RoomManager.toggle_reveal(socket.assigns.room_id, socket.assigns.name)
 
     {:noreply, socket}
   end
@@ -193,6 +196,22 @@ defmodule QuickAverageWeb.AverageLive do
     {:noreply, push_event(new_socket, "clear_number", %{})}
   end
 
+  @impl true
+  def handle_info({:set_reveal, name, manual_reveal?}, socket) do
+    verb =
+      if manual_reveal? do
+        "revealed"
+      else
+        "hidden"
+      end
+
+    new_socket =
+      assign(socket, manual_reveal?: manual_reveal?)
+      |> put_flash(:info, "Numbers #{verb}ed by #{name}")
+
+    {:noreply, new_socket}
+  end
+
   def is_alone?(users), do: length(users) < 2
 
   def generate_admin_token(room_id) do
@@ -223,4 +242,6 @@ defmodule QuickAverageWeb.AverageLive do
   def parse_bool("false"), do: false
   def parse_bool("true"), do: true
   def parse_bool(input), do: !!input
+  def reveal_text(true), do: "Hide"
+  def reveal_text(false), do: "Reveal"
 end

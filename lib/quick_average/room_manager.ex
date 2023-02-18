@@ -82,12 +82,17 @@ defmodule QuickAverage.RoomManager do
   end
 
   @impl true
-  def handle_call(:toggle_reveal, _from, state) do
+  def handle_call({:toggle_reveal, name}, _from, state) do
     new_state = %{
       state
       | manual_reveal: !state.manual_reveal,
         version: state.version + 1
     }
+
+    PubSubInterface.broadcast(
+      state.room_id,
+      {:set_reveal, name, new_state.manual_reveal}
+    )
 
     {:reply, :ok, new_state}
   end
@@ -124,10 +129,10 @@ defmodule QuickAverage.RoomManager do
     )
   end
 
-  def toggle_reveal(room_id) do
+  def toggle_reveal(room_id, name) do
     GenServer.call(
       name(room_id),
-      :toggle_reveal
+      {:toggle_reveal, name}
     )
   end
 
