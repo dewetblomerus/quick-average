@@ -17,7 +17,7 @@ defmodule QuickAverageWeb.Router do
   scope "/", QuickAverageWeb do
     pipe_through(:browser)
 
-    get("/", PageController, :home)
+    live("/", HomeLive)
     live("/:room_id", AverageLive)
   end
 
