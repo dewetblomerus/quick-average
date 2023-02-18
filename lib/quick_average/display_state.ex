@@ -5,13 +5,13 @@ defmodule QuickAverage.DisplayState do
   @enforce_keys [:users, :average]
   defstruct [:users, :average]
 
-  def from_input_state(%{presences: presences, reveal: reveal}) do
+  def from_input_state(%{presences: presences, manual_reveal: manual_reveal}) do
     presences
     |> Map.values()
     |> Enum.map(&metas_to_user/1)
     |> Enum.sort()
     |> determine_active_users()
-    |> determine_should_reveal(reveal)
+    |> determine_should_reveal(manual_reveal)
     |> update_user_display_numbers()
     |> determine_average()
   end

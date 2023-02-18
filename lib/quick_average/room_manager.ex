@@ -16,16 +16,19 @@ defmodule QuickAverage.RoomManager do
   def init(room_id) do
     Logger.info("Starting RoomManager for #{room_id} 🤖")
     presences = PresenceInterface.list(room_id)
-    reveal = false
+    manual_reveal = false
 
     display_state =
-      DisplayState.from_input_state(%{presences: presences, reveal: reveal})
+      DisplayState.from_input_state(%{
+        presences: presences,
+        manual_reveal: manual_reveal
+      })
 
     state = %{
       display_state: display_state,
       room_id: room_id,
       presences: presences,
-      reveal: reveal,
+      manual_reveal: manual_reveal,
       start_time: now(),
       version: 0,
       display_version: 0
@@ -42,14 +45,17 @@ defmodule QuickAverage.RoomManager do
         %{
           version: version,
           display_version: display_version,
-          reveal: reveal,
+          manual_reveal: manual_reveal,
           presences: presences
         } = state
       )
       when version > display_version do
     %DisplayState{users: users} =
       display_state =
-      DisplayState.from_input_state(%{presences: presences, reveal: reveal})
+      DisplayState.from_input_state(%{
+        presences: presences,
+        manual_reveal: manual_reveal
+      })
 
     if Enum.empty?(users) do
       Logger.info("No users left, stopping RoomManager for #{state.room_id} 🤖")
@@ -77,13 +83,18 @@ defmodule QuickAverage.RoomManager do
 
   @impl true
   def handle_call(:toggle_reveal, _from, state) do
-    new_state = %{state | reveal: !state.reveal, version: state.version + 1}
+    new_state = %{
+      state
+      | manual_reveal: !state.manual_reveal,
+        version: state.version + 1
+    }
+
     {:reply, :ok, new_state}
   end
 
   @impl true
   def handle_call({:set_reveal, false}, _from, state) do
-    new_state = %{state | reveal: false, version: state.version + 1}
+    new_state = %{state | manual_reveal: false, version: state.version + 1}
     {:reply, :ok, new_state}
   end
 
