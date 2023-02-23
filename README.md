@@ -1,18 +1,15 @@
-# QuickAverage
+# QuickAverage is live at [quickaverage.com](https://quickaverage.com)
 
-To start your Phoenix server:
+## Overview
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+### Where we collaborate on Quickaverage
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+* [Workflow](https://www.figma.com/file/USVrjbmq0GDgsy1ituojda/Quick-Average?node-id=0%3A1&t=vK6Cvb6kucCkEkXY-0)
+* [Design](https://www.figma.com/file/XU0O8e6OtXQFFpi334MV86/Quick-Average?node-id=10%3A86&t=8H5F1QkcVIHFXgmD-0)
+* [Kanban Board](https://github.com/users/dewetblomerus/projects/1)
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+### Local Development
 
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+* Install Erlang and Elixir: `asdf install` (skip this for codespaces)
+* Install dependencies: `mix deps.get`
+* Start Phoenix: `mix phx.server`
