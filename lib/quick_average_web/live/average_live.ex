@@ -193,7 +193,14 @@ defmodule QuickAverageWeb.AverageLive do
       assign(socket, changeset: changeset)
       |> put_flash(:info, "Numbers cleared by #{clearer_name}")
 
+    Process.send_after(self(), :clear_flash, 5000)
+
     {:noreply, push_event(new_socket, "clear_number", %{})}
+  end
+
+  @impl true
+  def handle_info(:clear_flash, socket) do
+    {:noreply, clear_flash(socket)}
   end
 
   @impl true
