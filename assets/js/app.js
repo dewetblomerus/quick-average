@@ -42,8 +42,9 @@ Hooks.RestoreUser = {
   mounted() {
     console.log("Restoring user from localStorage 🥶")
     this.pushEvent('restore_user', {
-      name: localStorage.getItem('name'),
       admin_token: localStorage.getItem('admin_token'),
+      name: localStorage.getItem('name'),
+      only_viewing: localStorage.getItem('only_viewing'),
     })
   },
 }

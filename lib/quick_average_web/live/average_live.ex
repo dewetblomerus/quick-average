@@ -81,7 +81,11 @@ defmodule QuickAverageWeb.AverageLive do
   @impl true
   def handle_event(
         "restore_user",
-        %{"name" => name, "admin_token" => admin_token} = partial_params,
+        %{
+          "name" => name,
+          "admin_token" => admin_token,
+          "only_viewing" => only_viewing
+        } = partial_params,
         socket
       ) do
     is_admin =
@@ -134,7 +138,11 @@ defmodule QuickAverageWeb.AverageLive do
       )
       |> clear_flash()
 
-    {:noreply, push_event(new_socket, "set_storage", %{name: name})}
+    {:noreply,
+     push_event(new_socket, "set_storage", %{
+       name: name,
+       only_viewing: only_viewing
+     })}
   end
 
   @impl true
