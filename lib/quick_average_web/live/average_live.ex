@@ -116,17 +116,10 @@ defmodule QuickAverageWeb.AverageLive do
   def handle_event(
         "form_update",
         %{
-          "user" =>
-            %{
-              "name" => name,
-              "number" => number,
-              "only_viewing" => only_viewing_input
-            } = user_params
+          "user" => user_params
         },
         socket
       ) do
-    only_viewing = parse_bool(only_viewing_input)
-
     changeset =
       user_params
       |> User.changeset()
@@ -135,12 +128,15 @@ defmodule QuickAverageWeb.AverageLive do
     should_update?(socket, changeset, user_params) &&
       PresenceInterface.update(socket, user_params)
 
+    name = user_params["name"]
+    only_viewing = parse_bool(user_params["only_viewing"])
+
     new_socket =
       assign(
         socket,
         changeset: changeset,
         name: name,
-        number: number,
+        number: user_params["number"],
         only_viewing: only_viewing
       )
       |> clear_flash()
