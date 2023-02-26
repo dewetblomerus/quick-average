@@ -26,10 +26,6 @@ defmodule QuickAverageWeb.AverageLiveTest do
              |> form("#user-form", user: %{name: nil, number: "9"})
              |> render_change() =~ "can&#39;t be blank"
 
-      assert index_live
-             |> form("#user-form", user: %{name: "De Wet", number: nil})
-             |> render_change() =~ "can&#39;t be blank"
-
       refute index_live
              |> form("#user-form", user: @create_attrs)
              |> render_change() =~ "can&#39;t be blank"

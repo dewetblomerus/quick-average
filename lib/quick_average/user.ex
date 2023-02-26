@@ -15,7 +15,9 @@ defmodule QuickAverage.User do
   def changeset(attrs) do
     %__MODULE__{}
     |> cast(attrs, @fields)
-    |> validate_required(@fields)
+    |> validate_required(:name)
+    |> validate_length(:name, max: 25)
+    |> validate_number(:number, less_than: 1_000_000, greater_than: -1_000_000)
   end
 
   def from_params(params) do
