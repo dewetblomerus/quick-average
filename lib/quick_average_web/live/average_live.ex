@@ -40,6 +40,8 @@ defmodule QuickAverageWeb.AverageLive do
       <% end %>
     </.simple_form>
 
+    <br />
+
     <%= if @is_admin do %>
       <.button phx-click="clear_clicked">Clear Numbers</.button>
       <.button phx-click="reveal_clicked">
@@ -49,6 +51,7 @@ defmodule QuickAverageWeb.AverageLive do
 
     <br />
     <h2>Average: <%= @average %></h2>
+
     <%= for user <- @users do %>
       <br />
       <%= user.name %>
