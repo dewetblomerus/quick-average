@@ -1,5 +1,4 @@
 defmodule QuickAverage.Presence do
-  alias QuickAverage.PubSub.Interface, as: PubSubInterface
   alias QuickAverage.RoomManager
 
   use Phoenix.Presence,
