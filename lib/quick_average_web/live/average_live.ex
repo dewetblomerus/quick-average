@@ -98,9 +98,10 @@ defmodule QuickAverageWeb.AverageLive do
     {:noreply,
      assign(
        socket,
+       changeset: User.changeset(user_params),
        is_admin: is_admin,
        name: name,
-       changeset: User.changeset(user_params)
+       only_viewing: only_viewing
      )}
   end
 

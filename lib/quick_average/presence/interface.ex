@@ -1,6 +1,5 @@
 defmodule QuickAverage.Presence.Interface do
   alias QuickAverage.{
-    DisplayState,
     Presence,
     User
   }
