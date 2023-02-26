@@ -24,16 +24,20 @@ defmodule QuickAverageWeb.AverageLive do
       phx-change="form_update"
       phx-submit="save"
     >
-      <.input field={{f, :name}} type="text" label="Name" />
-
-      <.input
-        field={{f, :number}}
-        type="number"
-        label="Number"
-        disabled={parse_bool(@only_viewing)}
-      />
+      <.input field={{f, :name}} type="text" label="Name" maxlength={25} />
 
       <.input field={{f, :only_viewing}} type="checkbox" label="Only Viewing" />
+
+      <%= if !@only_viewing do %>
+        <.input
+          field={{f, :number}}
+          type="number"
+          label="Number"
+          disabled={parse_bool(@only_viewing)}
+          max={1_000_000}
+          min={-1_000_000}
+        />
+      <% end %>
     </.simple_form>
 
     <%= if @is_admin do %>
