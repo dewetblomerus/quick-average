@@ -24,16 +24,20 @@ defmodule QuickAverageWeb.AverageLive do
       phx-change="form_update"
       phx-submit="save"
     >
-      <.input field={{f, :name}} type="text" label="Name" />
-
-      <.input
-        field={{f, :number}}
-        type="number"
-        label="Number"
-        disabled={parse_bool(@only_viewing)}
-      />
+      <.input field={{f, :name}} type="text" label="Name" maxlength={25} />
 
       <.input field={{f, :only_viewing}} type="checkbox" label="Only Viewing" />
+
+      <%= if !@only_viewing do %>
+        <.input
+          field={{f, :number}}
+          type="number"
+          label="Number"
+          disabled={parse_bool(@only_viewing)}
+          max={1_000_000}
+          min={-1_000_000}
+        />
+      <% end %>
     </.simple_form>
 
     <%= if @is_admin do %>
@@ -84,10 +88,12 @@ defmodule QuickAverageWeb.AverageLive do
         %{
           "name" => name,
           "admin_token" => admin_token,
-          "only_viewing" => only_viewing
+          "only_viewing" => only_viewing_input
         } = partial_params,
         socket
       ) do
+    only_viewing = parse_bool(only_viewing_input)
+
     is_admin =
       socket.assigns.is_admin ||
         validate_admin_token(socket.assigns.room_id, admin_token)
@@ -115,20 +121,12 @@ defmodule QuickAverageWeb.AverageLive do
         },
         socket
       ) do
-    PresenceInterface.update(socket, user_params)
     only_viewing = parse_bool(only_viewing_input)
-
-    action =
-      if only_viewing do
-        nil
-      else
-        :validate
-      end
 
     changeset =
       user_params
       |> User.changeset()
-      |> Map.put(:action, action)
+      |> Map.put(:action, :validate)
 
     new_socket =
       assign(
