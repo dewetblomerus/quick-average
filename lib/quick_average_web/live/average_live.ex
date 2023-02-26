@@ -24,7 +24,7 @@ defmodule QuickAverageWeb.AverageLive do
       phx-change="form_update"
       phx-submit="save"
     >
-      <.input field={{f, :name}} type="text" label="Name" maxlength={25} />
+      <.input field={{f, :name}} type="text" label="Name" maxlength={40} />
 
       <.input field={{f, :only_viewing}} type="checkbox" label="Only Viewing" />
 
@@ -69,6 +69,7 @@ defmodule QuickAverageWeb.AverageLive do
         is_admin: false,
         manual_reveal?: false,
         name: "",
+        number: nil,
         only_viewing: false,
         room_id: room_id,
         users: []
@@ -116,8 +117,11 @@ defmodule QuickAverageWeb.AverageLive do
         "form_update",
         %{
           "user" =>
-            %{"name" => name, "only_viewing" => only_viewing_input} =
-              user_params
+            %{
+              "name" => name,
+              "number" => number,
+              "only_viewing" => only_viewing_input
+            } = user_params
         },
         socket
       ) do
@@ -128,18 +132,22 @@ defmodule QuickAverageWeb.AverageLive do
       |> User.changeset()
       |> Map.put(:action, :validate)
 
+    should_update?(socket, changeset, user_params) &&
+      PresenceInterface.update(socket, user_params)
+
     new_socket =
       assign(
         socket,
         changeset: changeset,
         name: name,
+        number: number,
         only_viewing: only_viewing
       )
       |> clear_flash()
 
     {:noreply,
      push_event(new_socket, "set_storage", %{
-       name: name,
+       name: String.slice(name, 0, 25),
        only_viewing: only_viewing
      })}
   end
@@ -226,9 +234,9 @@ defmodule QuickAverageWeb.AverageLive do
     {:noreply, new_socket}
   end
 
-  def is_alone?(users), do: length(users) < 2
+  defp is_alone?(users), do: length(users) < 2
 
-  def generate_admin_token(room_id) do
+  defp generate_admin_token(room_id) do
     Phoenix.Token.sign(
       QuickAverageWeb.Endpoint,
       "admin state",
@@ -236,7 +244,7 @@ defmodule QuickAverageWeb.AverageLive do
     )
   end
 
-  def validate_admin_token(room_id, token) do
+  defp validate_admin_token(room_id, token) do
     admin_string = "#{room_id}:true"
 
     admin_state =
@@ -251,6 +259,20 @@ defmodule QuickAverageWeb.AverageLive do
       {:ok, ^admin_string} -> true
       _ -> false
     end
+  end
+
+  defp should_update?(socket, changeset, user_params) do
+    [:name, :number]
+    |> Enum.any?(fn field ->
+      valid_field_change?(field, socket, changeset, user_params)
+    end)
+  end
+
+  defp valid_field_change?(field, socket, changeset, user_params) do
+    string_field = Atom.to_string(field)
+
+    socket.assigns[field] != user_params[string_field] &&
+      !Keyword.has_key?(changeset.errors, field)
   end
 
   def parse_bool("false"), do: false
