@@ -204,7 +204,7 @@ defmodule QuickAverageWeb.AverageLive do
     PresenceInterface.update(socket, user_params)
 
     new_socket =
-      assign(socket, changeset: changeset)
+      assign(socket, changeset: changeset, number: nil)
       |> put_flash(:info, "Numbers cleared by #{clearer_name}")
 
     Process.send_after(self(), :clear_flash, 5000)
