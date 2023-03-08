@@ -261,7 +261,7 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   defp should_update?(socket, changeset, user_params) do
-    [:name, :number]
+    [:name, :number, :only_viewing]
     |> Enum.any?(fn field ->
       valid_field_change?(field, socket, changeset, user_params)
     end)
