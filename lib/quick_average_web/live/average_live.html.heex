@@ -33,7 +33,9 @@
       </div>
     <% end %>
 
-    <h2 class="font-semibold text-lg pb-2">Average: <%= @average %></h2>
+    <h2 class="font-semibold text-lg pb-2">
+      Average: <%= @average %>
+    </h2>
   </div>
 
   <div>
@@ -42,7 +44,7 @@
       <h2>Status</h2>
     </div>
     <%= for user <- @users do %>
-      <div class="flex flex-nowrap justify-between even:bg-gray-200 w-11/10">
+      <div class="flex flex-nowrap justify-between even:bg-gray-200 last:rounded-b-xl">
         <div class="pl-4"><%= user.name %></div>
         <div class="text-right pr-4"><%= user.number %></div>
       </div>
