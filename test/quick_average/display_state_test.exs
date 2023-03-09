@@ -54,7 +54,7 @@ defmodule QuickAverage.DisplayStateTest do
 
       display_users =
         [
-          %User{name: "Manager", number: "Viewing", only_viewing: true} | @users
+          %User{name: "Manager", number: "👓", only_viewing: true} | @users
         ]
         |> Enum.sort()
 
@@ -104,9 +104,9 @@ defmodule QuickAverage.DisplayStateTest do
       input_state: input_state
     }) do
       expected_users = [
-        %QuickAverage.User{name: "De Wet", number: "Hidden"},
-        %QuickAverage.User{name: "Nildecided", number: "Waiting"},
-        %QuickAverage.User{name: "Undecided", number: "Waiting"}
+        %QuickAverage.User{name: "De Wet", number: "✅"},
+        %QuickAverage.User{name: "Nildecided", number: "⏳"},
+        %QuickAverage.User{name: "Undecided", number: "⏳"}
       ]
 
       assert input_state
@@ -143,8 +143,8 @@ defmodule QuickAverage.DisplayStateTest do
     }) do
       expected_users = [
         %QuickAverage.User{name: "De Wet", number: 42},
-        %QuickAverage.User{name: "Nildecided", number: "Waiting"},
-        %QuickAverage.User{name: "Undecided", number: "Waiting"}
+        %QuickAverage.User{name: "Nildecided", number: "⏳"},
+        %QuickAverage.User{name: "Undecided", number: "⏳"}
       ]
 
       assert input_state
@@ -173,7 +173,7 @@ defmodule QuickAverage.DisplayStateTest do
       assert input_state
              |> DisplayState.from_input_state()
              |> Map.get(:average) ==
-               "Waiting"
+               "⏳"
     end
   end
 end

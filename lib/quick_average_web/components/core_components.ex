@@ -231,7 +231,7 @@ defmodule QuickAverageWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="space-y-8 bg-white mt-10">
+      <div class="space-y-4 bg-white mb-5">
         <%= render_slot(@inner_block, f) %>
         <div
           :for={action <- @actions}
