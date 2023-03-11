@@ -104,9 +104,9 @@ defmodule QuickAverage.DisplayStateTest do
       input_state: input_state
     }) do
       expected_users = [
-        %QuickAverage.User{name: "De Wet", number: "✅"},
-        %QuickAverage.User{name: "Nildecided", number: "⏳"},
-        %QuickAverage.User{name: "Undecided", number: "⏳"}
+        %QuickAverage.User{name: "De Wet", number: :hidden},
+        %QuickAverage.User{name: "Nildecided", number: :waiting},
+        %QuickAverage.User{name: "Undecided", number: :waiting}
       ]
 
       assert input_state
@@ -143,8 +143,8 @@ defmodule QuickAverage.DisplayStateTest do
     }) do
       expected_users = [
         %QuickAverage.User{name: "De Wet", number: 42},
-        %QuickAverage.User{name: "Nildecided", number: "⏳"},
-        %QuickAverage.User{name: "Undecided", number: "⏳"}
+        %QuickAverage.User{name: "Nildecided", number: :waiting},
+        %QuickAverage.User{name: "Undecided", number: :waiting}
       ]
 
       assert input_state
@@ -173,7 +173,7 @@ defmodule QuickAverage.DisplayStateTest do
       assert input_state
              |> DisplayState.from_input_state()
              |> Map.get(:average) ==
-               "⏳"
+               "Waiting"
     end
   end
 end
