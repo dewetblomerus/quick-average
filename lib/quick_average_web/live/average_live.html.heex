@@ -41,13 +41,10 @@
   <div>
     <div class="flex flex-nowrap justify-between font-semibold pl-4 pr-4">
       <h2>Name</h2>
-      <h2>Status</h2>
+      <h2>Number</h2>
     </div>
     <%= for user <- @users do %>
-      <div class="flex flex-nowrap justify-between even:bg-gray-200 last:rounded-b-xl">
-        <div class="pl-4"><%= user.name %></div>
-        <div class="text-right pr-4"><%= user.number %></div>
-      </div>
+      <.display_user name={user.name} number={user.number} />
     <% end %>
   </div>
 </div>

@@ -70,9 +70,9 @@ defmodule QuickAverage.DisplayState do
   end
 
   defp display_number(%{reveal: false, number: number}) when is_number(number),
-    do: "✅"
+    do: :hidden
 
-  defp display_number(_), do: "⏳"
+  defp display_number(_), do: :waiting
 
   defp determine_average(%{users: users, reveal: false}) do
     %__MODULE__{
@@ -98,7 +98,7 @@ defmodule QuickAverage.DisplayState do
     numbers = Enum.map(users, & &1.number) |> Enum.filter(&is_number/1)
 
     if Enum.empty?(numbers) do
-      "⏳"
+      "Waiting"
     else
       DisplayNumber.parse(Enum.sum(numbers) / Enum.count(numbers))
     end

@@ -13,6 +13,8 @@ defmodule QuickAverageWeb.AverageLive do
     User
   }
 
+  import QuickAverageWeb.UserListItem
+
   @impl true
   def mount(%{"room_id" => room_id}, _session, socket) do
     ManagerSupervisor.create(room_id)
