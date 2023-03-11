@@ -172,7 +172,6 @@ defmodule QuickAverage.DisplayStateTest do
     }) do
       assert input_state
              |> DisplayState.from_input_state()
-             |> IO.inspect(label: "display_state 🔥")
              |> Map.get(:average) ==
                "Waiting"
     end
