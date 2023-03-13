@@ -37,6 +37,7 @@ defmodule QuickAverage.MixProject do
       {:floki, ">= 0.34.0", only: :test},
       {:gettext, "~> 0.22"},
       {:heroicons, "~> 0.5"},
+      {:jason, "~> 1.2"},
       {:mimic, "~> 1.7", only: :test},
       {:mix_test_watch, "~> 1.1", only: :dev, runtime: false},
       {:phoenix_ecto, "~> 4.4"},
