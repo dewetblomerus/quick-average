@@ -8,12 +8,6 @@ config :quick_average, QuickAverageWeb.Endpoint,
     "4qt+wsOzyogsO0/Uy+8wkRHxTpzMMy4OguVQereWELuYN30O7zYpXbRgsfCHdpXB",
   server: false
 
-# In test we don't send emails.
-config :quick_average, QuickAverage.Mailer, adapter: Swoosh.Adapters.Test
-
-# Disable swoosh api client as it is only required for production adapters.
-config :swoosh, :api_client, false
-
 # Print only warnings and errors during test
 config :logger, level: :warning
 

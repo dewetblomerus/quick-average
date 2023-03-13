@@ -34,11 +34,9 @@ defmodule QuickAverage.MixProject do
     [
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:esbuild, "~> 0.6", runtime: Mix.env() == :dev},
-      {:finch, "~> 0.14"},
       {:floki, ">= 0.34.0", only: :test},
       {:gettext, "~> 0.22"},
       {:heroicons, "~> 0.5"},
-      {:jason, "~> 1.4"},
       {:mimic, "~> 1.7", only: :test},
       {:mix_test_watch, "~> 1.1", only: :dev, runtime: false},
       {:phoenix_ecto, "~> 4.4"},
@@ -48,7 +46,6 @@ defmodule QuickAverage.MixProject do
       {:phoenix_live_view, "~> 0.18.17"},
       {:phoenix, "~> 1.7.1", override: true},
       {:plug_cowboy, "~> 2.6"},
-      {:swoosh, "~> 1.3"},
       {:tailwind, "~> 0.1.10", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"}
