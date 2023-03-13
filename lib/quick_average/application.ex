@@ -15,8 +15,6 @@ defmodule QuickAverage.Application do
       QuickAverage.Presence,
       {Registry, keys: :unique, name: QuickAverage.Registry},
       {DynamicSupervisor, name: QuickAverage.RoomManagerSupervisor},
-      # Start Finch
-      {Finch, name: QuickAverage.Finch},
       # Start the Endpoint (http/https)
       QuickAverageWeb.Endpoint
 
