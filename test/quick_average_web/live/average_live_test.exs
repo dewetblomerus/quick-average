@@ -4,23 +4,55 @@ defmodule QuickAverageWeb.AverageLiveTest do
 
   alias QuickAverage.{
     DisplayState,
+    Presence,
     User
   }
 
+  alias QuickAverage.RoomManager.SupervisorInterface,
+    as: ManagerSupervisor
+
+  import Mimic
   import Phoenix.LiveViewTest
 
   @create_attrs %{name: "some name", number: 42}
 
   describe "Index" do
-    test "renders the form", %{conn: conn} do
-      {:ok, _index_live, html} = live(conn, ~p"/5")
+    setup do
+      room_id = "#{Enum.random(1..100)}"
+
+      trackable_user = %{
+        user: User.from_params(%{"name" => "Anonymous", "number" => nil})
+      }
+
+      expect(
+        Presence,
+        :track,
+        fn _, ^room_id, _, ^trackable_user -> :ok end
+      )
+
+      expect(ManagerSupervisor, :create, fn ^room_id -> :ok end)
+
+      expect(Phoenix.PubSub, :subscribe, fn QuickAverage.PubSub, _ ->
+        :ok
+      end)
+
+      %{room_id: room_id}
+    end
+
+    test "sets up tracking and subscribing", %{conn: conn, room_id: room_id} do
+      {:ok, _index_live, html} = live(conn, ~p"/#{room_id}")
+      verify!()
+    end
+
+    test "renders the form", %{conn: conn, room_id: room_id} do
+      {:ok, _index_live, html} = live(conn, ~p"/#{room_id}")
 
       assert html =~ "Name"
       assert html =~ "Number"
     end
 
-    test "renders validations", %{conn: conn} do
-      {:ok, index_live, _html} = live(conn, ~p"/7")
+    test "renders validations", %{conn: conn, room_id: room_id} do
+      {:ok, index_live, _html} = live(conn, ~p"/#{room_id}")
 
       assert index_live
              |> form("#user-form", user: %{name: nil, number: "9"})
@@ -31,8 +63,8 @@ defmodule QuickAverageWeb.AverageLiveTest do
              |> render_change() =~ "can&#39;t be blank"
     end
 
-    test "lists the users", %{conn: conn} do
-      {:ok, index_live, _html} = live(conn, ~p"/9")
+    test "lists the users", %{conn: conn, room_id: room_id} do
+      {:ok, index_live, _html} = live(conn, ~p"/#{room_id}")
 
       users = [
         %User{
