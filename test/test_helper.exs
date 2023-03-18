@@ -1,3 +1,5 @@
 Application.ensure_all_started(:mimic)
 Mimic.copy(QuickAverage.Presence)
+Mimic.copy(QuickAverage.RoomManager.SupervisorInterface)
+Mimic.copy(Phoenix.PubSub)
 ExUnit.start()
