@@ -76,6 +76,16 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   @impl true
+  def handle_event("text_copied", %{"text" => room_url}, socket) do
+    new_socket =
+      put_flash(socket, :info, "Room URL Copied to clipboard: #{room_url}")
+
+    Process.send_after(self(), :clear_flash, 5000)
+
+    {:noreply, new_socket}
+  end
+
+  @impl true
   def handle_event(
         "form_update",
         %{

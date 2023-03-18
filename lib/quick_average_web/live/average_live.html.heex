@@ -49,7 +49,7 @@
 </div>
 
 <%= if Enum.count(@users) < 2 do %>
-  <div phx-click={JS.dispatch("phx:copy", to: "#url-div")} class="m-4">
+  <div id="copy" data-to="#url-div" phx-hook="Copy">
     <div class="flex">
       <div class="grow"></div>
       <div class="border-dashed border-2 border-gray-400 rounded-l mt-2 text-center bg-grey-200">
