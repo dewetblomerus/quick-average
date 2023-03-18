@@ -15,5 +15,6 @@ defmodule QuickAverageWeb.UserListItem do
 
   def display_number(:waiting), do: "Waiting ⏳"
   def display_number(:hidden), do: "Hidden ✅"
+  def display_number(:viewing), do: "Viewing 📺"
   def display_number(number), do: number
 end

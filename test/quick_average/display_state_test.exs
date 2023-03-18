@@ -54,7 +54,7 @@ defmodule QuickAverage.DisplayStateTest do
 
       display_users =
         [
-          %User{name: "Manager", number: "👓", only_viewing: true} | @users
+          %User{name: "Manager", number: :viewing, only_viewing: true} | @users
         ]
         |> Enum.sort()
 

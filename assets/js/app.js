@@ -16,19 +16,21 @@
 //
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
-import "phoenix_html"
+import 'phoenix_html'
 // Establish Phoenix Socket and LiveView configuration.
-import {Socket} from "phoenix"
-import {LiveSocket} from "phoenix_live_view"
-import topbar from "../vendor/topbar"
+import { Socket } from 'phoenix'
+import { LiveSocket } from 'phoenix_live_view'
+import topbar from '../vendor/topbar'
 
-let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+let csrfToken = document
+  .querySelector("meta[name='csrf-token']")
+  .getAttribute('content')
 
 let Hooks = {}
 
 window.addEventListener(`phx:clear_number`, () => {
-  console.log("Clearing Number 🔥")
-  document.getElementById("user-form_number").value = "";
+  console.log('Clearing Number 🔥')
+  document.getElementById('user-form_number').value = ''
 })
 
 window.addEventListener(`phx:set_storage`, (e) => {
@@ -40,7 +42,7 @@ window.addEventListener(`phx:set_storage`, (e) => {
 
 Hooks.RestoreUser = {
   mounted() {
-    console.log("Restoring user from localStorage 🥶")
+    console.log('Restoring user from localStorage 🥶')
     this.pushEvent('restore_user', {
       admin_token: localStorage.getItem('admin_token'),
       name: localStorage.getItem('name'),
@@ -49,16 +51,31 @@ Hooks.RestoreUser = {
   },
 }
 
-let liveSocket = new LiveSocket("/live", Socket, {
-  params: {_csrf_token: csrfToken},
-  hooks: Hooks
+Hooks.Copy = {
+  mounted() {
+    let { to } = this.el.dataset
+    this.el.addEventListener('click', (ev) => {
+      ev.preventDefault()
+      let text = document.querySelector(to).innerText
+      navigator.clipboard.writeText(text).then(() => {
+        console.log('All done again!')
+      })
+      this.pushEvent('text_copied', { text: text })
+    })
+  },
+}
+
+let liveSocket = new LiveSocket('/live', Socket, {
+  params: { _csrf_token: csrfToken },
+  hooks: Hooks,
 })
 
-
 // Show progress bar on live navigation and form submits
-topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
-window.addEventListener("phx:page-loading-start", info => topbar.delayedShow(200))
-window.addEventListener("phx:page-loading-stop", info => topbar.hide())
+topbar.config({ barColors: { 0: '#29d' }, shadowColor: 'rgba(0, 0, 0, .3)' })
+window.addEventListener('phx:page-loading-start', (info) =>
+  topbar.delayedShow(200)
+)
+window.addEventListener('phx:page-loading-stop', (info) => topbar.hide())
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()

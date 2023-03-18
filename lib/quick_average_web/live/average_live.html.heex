@@ -1,4 +1,3 @@
-<div id="hooker" phx-hook="RestoreUser"></div>
 <div class="border-2 border-gray-400 rounded-xl mt-2">
   <div class="pl-4 pt-4 pr-4">
     <.simple_form
@@ -48,3 +47,25 @@
     <% end %>
   </div>
 </div>
+
+<%= if Enum.count(@users) < 4 do %>
+  <div id="copy" data-to="#url-div" phx-hook="Copy">
+    <div class="flex">
+      <div class="grow"></div>
+      <div class="border-dashed border-2 border-gray-400 rounded-l mt-2 text-center bg-grey-200">
+        <div class="flex flex-row mx-2 my-1">
+          <div id="url-div">
+            <%= @room_url %>
+          </div>
+          <button class="ml-1">
+            ✂️
+          </button>
+        </div>
+      </div>
+      <div class="grow"></div>
+    </div>
+    <button>
+      QuickAverage can only provide value if you have multiple users. Click to copy and then share this link with your collaborators.
+    </button>
+  </div>
+<% end %>
