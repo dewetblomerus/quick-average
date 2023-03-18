@@ -83,11 +83,13 @@ defmodule QuickAverageWeb.AverageLiveTest do
         |> DisplayState.from_input_state()
 
       send(index_live.pid, display_state)
-      assert render(index_live) =~ "Bob"
-      assert render(index_live) =~ "440"
-      assert render(index_live) =~ "De Wet"
-      assert render(index_live) =~ "420"
-      assert render(index_live) =~ "430"
+      rendered = render(index_live)
+
+      assert rendered =~ "Bob"
+      assert rendered =~ "440"
+      assert rendered =~ "De Wet"
+      assert rendered =~ "420"
+      assert rendered =~ "430"
     end
   end
 
