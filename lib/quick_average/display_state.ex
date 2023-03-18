@@ -63,7 +63,7 @@ defmodule QuickAverage.DisplayState do
     |> Enum.all?(&is_number(&1.number))
   end
 
-  defp display_number(%{only_viewing: true}), do: "👓"
+  defp display_number(%{only_viewing: true}), do: :viewing
 
   defp display_number(%{reveal: true, number: number}) when is_number(number) do
     DisplayNumber.parse(number)

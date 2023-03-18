@@ -69,11 +69,18 @@ defmodule QuickAverageWeb.AverageLiveTest do
       users = [
         %User{
           name: "Bob",
-          number: 440
+          number: 440,
+          only_viewing: false
         },
         %User{
           name: "De Wet",
-          number: 420
+          number: 420,
+          only_viewing: false
+        },
+        %User{
+          name: "Marysol",
+          number: nil,
+          only_viewing: true
         }
       ]
 
@@ -90,6 +97,8 @@ defmodule QuickAverageWeb.AverageLiveTest do
       assert rendered =~ "De Wet"
       assert rendered =~ "420"
       assert rendered =~ "430"
+      assert rendered =~ "Marysol"
+      assert rendered =~ "Viewing 📺"
     end
   end
 
