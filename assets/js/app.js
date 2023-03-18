@@ -70,7 +70,8 @@ liveSocket.connect()
 window.liveSocket = liveSocket
 
 window.addEventListener("phx:copy", (event) => {
-let text = event.target.value; // Alternatively use an element or data tag!
+  console.log(event, '🔥')
+let text = event.target.innerText; // Alternatively use an element or data tag!
   navigator.clipboard.writeText(text).then(() => {
     console.log("All done!"); // Or a nice tooltip or something.
   })
