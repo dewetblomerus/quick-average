@@ -42,6 +42,11 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   @impl true
+  def handle_params(_params, room_url, socket) do
+    {:noreply, assign(socket, room_url: room_url)}
+  end
+
+  @impl true
   def handle_event(
         "restore_user",
         %{

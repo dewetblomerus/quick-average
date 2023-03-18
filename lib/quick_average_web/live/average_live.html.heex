@@ -1,4 +1,3 @@
-<div id="hooker" phx-hook="RestoreUser"></div>
 <div class="border-2 border-gray-400 rounded-xl mt-2">
   <div class="pl-4 pt-4 pr-4">
     <.simple_form
@@ -48,3 +47,9 @@
     <% end %>
   </div>
 </div>
+
+<button phx-click={JS.dispatch("phx:copy", to: "#control-codes")}>
+  📋
+</button>
+
+<input type="text" id="control-codes" value={@room_url} />
