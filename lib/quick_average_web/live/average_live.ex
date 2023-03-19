@@ -24,6 +24,7 @@ defmodule QuickAverageWeb.AverageLive do
       assign(socket, %{
         average: "Waiting",
         changeset: User.changeset(%{}),
+        flash_timer: nil,
         is_admin: false,
         manual_reveal?: false,
         name: "",
@@ -77,10 +78,16 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def handle_event("text_copied", %{"text" => room_url}, socket) do
-    new_socket =
-      put_flash(socket, :info, "Room URL Copied to clipboard: #{room_url}")
+    if socket.assigns.flash_timer do
+      Process.cancel_timer(socket.assigns.flash_timer)
+    end
 
-    Process.send_after(self(), :clear_flash, 5000)
+    timer = Process.send_after(self(), :clear_flash, 5000)
+
+    new_socket =
+      socket
+      |> put_flash(:info, "Room URL Copied to clipboard: #{room_url}")
+      |> assign(flash_timer: timer)
 
     {:noreply, new_socket}
   end
