@@ -58,7 +58,7 @@ Hooks.Copy = {
       ev.preventDefault()
       let text = document.querySelector(to).innerText
       navigator.clipboard.writeText(text).then(() => {
-        console.log('All done again!')
+        console.log('Copied text to clipboard 📋: ', text)
       })
       this.pushEvent('text_copied', { text: text })
     })
