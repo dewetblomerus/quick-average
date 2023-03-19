@@ -40,7 +40,7 @@ defmodule QuickAverageWeb.AverageLiveTest do
     end
 
     test "sets up tracking and subscribing", %{conn: conn, room_id: room_id} do
-      {:ok, _index_live, html} = live(conn, ~p"/#{room_id}")
+      {:ok, _index_live, _html} = live(conn, ~p"/#{room_id}")
       verify!()
     end
 
