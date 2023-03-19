@@ -78,18 +78,12 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def handle_event("text_copied", %{"text" => room_url}, socket) do
-    if socket.assigns.flash_timer do
-      Process.cancel_timer(socket.assigns.flash_timer)
-    end
-
-    timer = Process.send_after(self(), :clear_flash, 5000)
-
-    new_socket =
-      socket
-      |> put_flash(:info, "Room URL Copied to clipboard: #{room_url}")
-      |> assign(flash_timer: timer)
-
-    {:noreply, new_socket}
+    {:noreply,
+     put_timed_flash(
+       socket,
+       :info,
+       "Room URL Copied to clipboard: #{room_url}"
+     )}
   end
 
   @impl true
@@ -182,9 +176,7 @@ defmodule QuickAverageWeb.AverageLive do
 
     new_socket =
       assign(socket, changeset: changeset, number: nil)
-      |> put_flash(:info, "Numbers cleared by #{clearer_name}")
-
-    Process.send_after(self(), :clear_flash, 5000)
+      |> put_timed_flash(:info, "Numbers cleared by #{clearer_name}")
 
     {:noreply, push_event(new_socket, "clear_number", %{})}
   end
@@ -249,6 +241,18 @@ defmodule QuickAverageWeb.AverageLive do
 
     socket.assigns[field] != user_params[string_field] &&
       !Keyword.has_key?(changeset.errors, field)
+  end
+
+  defp put_timed_flash(socket, key, message, timeout \\ 5000) do
+    if socket.assigns.flash_timer do
+      Process.cancel_timer(socket.assigns.flash_timer)
+    end
+
+    timer = Process.send_after(self(), :clear_flash, timeout)
+
+    socket
+    |> put_flash(key, message)
+    |> assign(flash_timer: timer)
   end
 
   def parse_bool("false"), do: false
