@@ -88,3 +88,6 @@ jobs:
 
     - name: Credo
       run: mix credo --strict
+
+    - name: Sobelow
+      run: mix sobelow
