@@ -76,4 +76,4 @@ jobs:
       run: mix credo --strict
 
     - name: Sobelow
-      run: mix sobelow --exit
+      run: mix sobelow --config
