@@ -20,22 +20,14 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
-    strategy:
-      # Specify the OTP and Elixir versions to use when building
-      # and running the workflow steps.
-      matrix:
-        otp: ['25.2.3']       # Define the OTP version [required]
-        elixir: ['1.14.3']    # Define the elixir version [required]
+    name: Elixir Checks
     steps:
-    # Step: Setup Elixir + Erlang image as the base.
     - name: Set up Elixir
       uses: erlef/setup-beam@v1
       with:
-        otp-version: ${{matrix.otp}}
-        elixir-version: ${{matrix.elixir}}
+        otp-version: 25.2.3
+        elixir-version: 1.14.3
 
-    # Step: Check out the code.
     - name: Checkout code
       uses: actions/checkout@v3
 
@@ -71,20 +63,17 @@ jobs:
     - name: Install dependencies
       run: mix deps.get
 
-    # Step: Compile the project treating any warnings as errors.
-    # Customize this step if a different behavior is desired.
     - name: Compiles without warnings
       run: mix compile --warnings-as-errors
 
-    # Step: Check that the checked in code has already been formatted.
-    # This step fails if something was found unformatted.
-    # Customize this step as desired.
     - name: Check Formatting
       run: mix format --check-formatted
 
-    # Step: Execute the tests.
     - name: Run tests
       run: mix test
 
     - name: Credo
       run: mix credo --strict
+
+    - name: Sobelow
+      run: mix sobelow --config
