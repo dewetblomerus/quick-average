@@ -7,10 +7,7 @@ defmodule QuickAverageWeb.Router do
     plug(:fetch_live_flash)
     plug(:put_root_layout, {QuickAverageWeb.Layouts, :root})
     plug(:protect_from_forgery)
-
-    plug(:put_secure_browser_headers, %{
-      "content-security-policy" => "default-src 'self'"
-    })
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :admins_only do
