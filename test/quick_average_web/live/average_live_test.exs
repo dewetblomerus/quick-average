@@ -30,7 +30,7 @@ defmodule QuickAverageWeb.AverageLiveTest do
         fn _, ^room_id, _, ^trackable_user -> :ok end
       )
 
-      expect(ManagerSupervisor, :create, fn ^room_id -> :ok end)
+      stub(ManagerSupervisor, :create, fn ^room_id -> :ok end)
 
       expect(Phoenix.PubSub, :subscribe, fn QuickAverage.PubSub, _ ->
         :ok
