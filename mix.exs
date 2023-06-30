@@ -5,7 +5,7 @@ defmodule QuickAverage.MixProject do
     [
       app: :quick_average,
       version: "0.1.0",
-      elixir: "~> 1.14",
+      elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -40,7 +40,7 @@ defmodule QuickAverage.MixProject do
       {:jason, "~> 1.2"},
       {:mimic, "~> 1.7", only: :test},
       {:mix_test_watch, "~> 1.1", only: :dev, runtime: false},
-      {:phoenix_ecto, "~> 4.4"},
+      {:phoenix_ecto, "~> 4.4.2"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_dashboard, "~> 0.7.2"},
       {:phoenix_live_reload, "~> 1.4", only: :dev},
