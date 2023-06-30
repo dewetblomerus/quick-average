@@ -21,6 +21,12 @@ defmodule QuickAverageWeb.Router do
     live_dashboard("/dashboard", metrics: QuickAverageWeb.Telemetry)
   end
 
+  scope "/about", QuickAverageWeb, assigns: %{about: true} do
+    pipe_through(:browser)
+
+    live("/", AboutLive)
+  end
+
   scope "/", QuickAverageWeb do
     pipe_through(:browser)
 
