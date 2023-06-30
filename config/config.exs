@@ -9,6 +9,7 @@ import Config
 
 # Configures the endpoint
 config :quick_average, QuickAverageWeb.Endpoint,
+  adapter: Bandit.PhoenixAdapter,
   url: [host: "localhost"],
   render_errors: [
     formats: [html: QuickAverageWeb.ErrorHTML, json: QuickAverageWeb.ErrorJSON],
