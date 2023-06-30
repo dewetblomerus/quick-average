@@ -17,6 +17,22 @@
     </script>
   </head>
   <body class="bg-white antialiased">
+    <%= unless assigns[:about] do %>
+      <.link href={~p"/about"}>
+        <.button class="float-right mr-1">
+          About
+        </.button>
+      </.link>
+    <% end %>
+
+    <%= if assigns[:about] do %>
+      <.link href={~p"/"}>
+        <.button class="float-right mt-2 mr-1">
+          Create Random Room
+        </.button>
+      </.link>
+    <% end %>
+
     <%= @inner_content %>
   </body>
 </html>
