@@ -23,10 +23,17 @@ defmodule QuickAverage.Benchmark.SupervisorInterface do
 
     case diff do
       # if the difference is positive, create that many zombies
-      diff when diff > 0 -> Enum.each(1..diff, fn _ -> start_child(room_id) end)
+      diff when diff > 0 ->
+        Enum.each(1..diff, fn _ ->
+          start_child(room_id)
+        end)
+
       # if the difference is negative, delete that many zombies
-      diff when diff < 0 -> Enum.each(-1..diff, fn _ -> delete_one() end)
-      0 -> true
+      diff when diff < 0 ->
+        Enum.each(-1..diff, fn _ -> delete_one() end)
+
+      0 ->
+        true
     end
 
     dbg(count_children())
