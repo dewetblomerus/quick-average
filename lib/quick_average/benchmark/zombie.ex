@@ -52,6 +52,11 @@ defmodule QuickAverage.Benchmark.Zombie do
   end
 
   @impl true
+  def handle_info({:set_reveal, _, _}, state) do
+    {:noreply, state}
+  end
+
+  @impl true
   def handle_info({:clear_number, clearer_name}, state) do
     dbg(clearer_name)
 
