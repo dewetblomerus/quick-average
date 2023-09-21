@@ -99,10 +99,15 @@ defmodule QuickAverageWeb.AverageLive do
       |> User.changeset()
       |> Map.put(:action, :validate)
 
-    should_update?(socket, changeset, user_params) &&
-      PresenceInterface.update(socket, user_params)
+    sanitized_user_params =
+      Map.update!(user_params, "name", &String.slice(&1, 0, 20))
 
-    name = user_params["name"]
+    should_update?(socket, changeset, sanitized_user_params) &&
+      PresenceInterface.update(socket, sanitized_user_params)
+
+    name =
+      sanitized_user_params["name"]
+
     only_viewing = parse_bool(user_params["only_viewing"])
 
     new_socket =
@@ -117,7 +122,7 @@ defmodule QuickAverageWeb.AverageLive do
 
     {:noreply,
      push_event(new_socket, "set_storage", %{
-       name: String.slice(name, 0, 25),
+       name: name,
        only_viewing: only_viewing
      })}
   end
