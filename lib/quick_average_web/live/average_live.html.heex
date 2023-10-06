@@ -10,7 +10,11 @@
     >
       <.input field={{f, :name}} type="text" label="Name" maxlength={30} />
 
-      <.input field={{f, :only_viewing}} type="checkbox" label="Only Viewing" />
+      <.input
+        field={{f, :only_viewing}}
+        type="toggle"
+        label="Only Viewing 📺"
+      />
 
       <%= if !@only_viewing do %>
         <.input
