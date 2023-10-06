@@ -294,7 +294,7 @@ defmodule QuickAverageWeb.CoreComponents do
     default: "text",
     values:
       ~w(checkbox color date datetime-local email file hidden month number password
-               range radio search select tel text textarea time url week)
+               range radio search select tel text textarea time url week toggle)
 
   attr :value, :any
 
@@ -353,6 +353,30 @@ defmodule QuickAverageWeb.CoreComponents do
         class="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900"
         {@rest}
       />
+      <%= @label %>
+    </label>
+    """
+  end
+
+  def input(%{type: "toggle"} = assigns) do
+    assigns =
+      assign_new(assigns, :checked, fn ->
+        input_equals?(assigns.value, "true")
+      end)
+
+    ~H"""
+    <label class="relative inline-flex items-center gap-2 cursor-pointer">
+      <input
+        type="checkbox"
+        id={@id || @name}
+        name={@name}
+        value="true"
+        checked={@checked}
+        class="sr-only peer"
+        {@rest}
+      />
+      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+      </div>
       <%= @label %>
     </label>
     """
