@@ -40,13 +40,18 @@ window.addEventListener(`phx:set_storage`, (e) => {
   }
 })
 
+const userFromStorage = {
+  admin_token: localStorage.getItem('admin_token'),
+  name: localStorage.getItem('name'),
+  only_viewing: localStorage.getItem('only_viewing'),
+}
+
 Hooks.RestoreUser = {
   mounted() {
-    console.log('Restoring user from localStorage 🥶')
-    this.pushEvent('restore_user', {
-      admin_token: localStorage.getItem('admin_token'),
-      name: localStorage.getItem('name'),
-      only_viewing: localStorage.getItem('only_viewing'),
+    this.handleEvent('restore_user', () => {
+      console.log('Server requested user from localStorage 🥶')
+      console.log('Sending this user:', userFromStorage)
+      this.pushEvent('restore_user', userFromStorage)
     })
   },
 }

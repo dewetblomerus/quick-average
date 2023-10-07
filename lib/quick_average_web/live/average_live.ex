@@ -19,6 +19,7 @@ defmodule QuickAverageWeb.AverageLive do
   def mount(%{"room_id" => room_id}, _session, socket) do
     ManagerSupervisor.create(room_id)
     PubSubInterface.subscribe_display(room_id)
+    send(self(), :ask_frontend_to_restore_user)
 
     new_socket =
       assign(socket, %{
@@ -36,10 +37,7 @@ defmodule QuickAverageWeb.AverageLive do
 
     PresenceInterface.track(new_socket)
 
-    {
-      :ok,
-      new_socket
-    }
+    {:ok, new_socket}
   end
 
   @impl true
@@ -163,6 +161,11 @@ defmodule QuickAverageWeb.AverageLive do
     )
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info(:ask_frontend_to_restore_user, socket) do
+    {:noreply, push_event(socket, "restore_user", %{})}
   end
 
   @impl true
