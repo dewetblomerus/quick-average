@@ -151,7 +151,7 @@ defmodule QuickAverage.RoomManager do
     )
   end
 
-  def set_reveal(room_id, name, is_revealed) when is_boolean(is_revealed) do
+  def set_reveal(room_id, is_revealed) when is_boolean(is_revealed) do
     GenServer.call(
       name(room_id),
       {:set_reveal, is_revealed}

@@ -134,7 +134,7 @@ defmodule QuickAverageWeb.AverageLive do
       {:clear_number, assigns.name}
     )
 
-    RoomManager.set_reveal(assigns.room_id, assigns.name, false)
+    RoomManager.set_reveal(assigns.room_id, false)
 
     {:noreply, socket}
   end
@@ -147,7 +147,7 @@ defmodule QuickAverageWeb.AverageLive do
       ) do
     is_revealed = params["value"] == "true"
 
-    RoomManager.set_reveal(assigns.room_id, assigns.name, is_revealed)
+    RoomManager.set_reveal(assigns.room_id, is_revealed)
 
     verb =
       if is_revealed do
