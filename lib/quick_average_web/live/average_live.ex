@@ -26,7 +26,7 @@ defmodule QuickAverageWeb.AverageLive do
         changeset: User.changeset(%{}),
         flash_timer: nil,
         is_admin: false,
-        manual_reveal?: false,
+        is_revealed_manually: false,
         name: "",
         number: nil,
         only_viewing: false,
@@ -128,20 +128,39 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   @impl true
-  def handle_event("clear_clicked", _params, socket) do
+  def handle_event("clear_clicked", _params, %{assigns: assigns} = socket) do
     PubSubInterface.broadcast(
-      socket.assigns.room_id,
-      {:clear_number, socket.assigns.name}
+      assigns.room_id,
+      {:clear_number, assigns.name}
     )
 
-    RoomManager.set_reveal(socket.assigns.room_id, false)
+    RoomManager.set_reveal(assigns.room_id, assigns.name, false)
 
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("reveal_clicked", _params, socket) do
-    RoomManager.toggle_reveal(socket.assigns.room_id, socket.assigns.name)
+  def handle_event(
+        "reveal_manually",
+        params,
+        %{assigns: assigns} = socket
+      ) do
+    is_revealed = params["value"] == "true"
+
+    RoomManager.set_reveal(assigns.room_id, assigns.name, is_revealed)
+
+    verb =
+      if is_revealed do
+        "revealed"
+      else
+        "hidden"
+      end
+
+    RoomManager.send_flash(
+      assigns.room_id,
+      :info,
+      "Numbers #{verb} by #{assigns.name}"
+    )
 
     {:noreply, socket}
   end
@@ -169,11 +188,11 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   @impl true
-  def handle_info({:clear_number, clearer_name}, socket) do
+  def handle_info({:clear_number, clearer_name}, %{assigns: assigns} = socket) do
     user_params = %{
-      "name" => socket.assigns.name,
+      "name" => assigns.name,
       "number" => nil,
-      "only_viewing" => socket.assigns.only_viewing
+      "only_viewing" => assigns.only_viewing
     }
 
     changeset = User.changeset(user_params)
@@ -192,17 +211,14 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   @impl true
-  def handle_info({:set_reveal, name, manual_reveal?}, socket) do
-    verb =
-      if manual_reveal? do
-        "revealed"
-      else
-        "hidden"
-      end
+  def handle_info({:show_flash, level, message}, socket) do
+    {:noreply, put_flash(socket, level, message)}
+  end
 
+  @impl true
+  def handle_info({:set_reveal, is_revealed_manually}, socket) do
     new_socket =
-      assign(socket, manual_reveal?: manual_reveal?)
-      |> put_flash(:info, "Numbers #{verb}ed by #{name}")
+      assign(socket, is_revealed_manually: is_revealed_manually)
 
     {:noreply, new_socket}
   end

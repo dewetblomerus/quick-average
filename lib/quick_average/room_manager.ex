@@ -16,19 +16,19 @@ defmodule QuickAverage.RoomManager do
   def init(room_id) do
     Logger.info("Starting RoomManager for #{room_id} 🤖")
     presences = PresenceInterface.list(room_id)
-    manual_reveal = false
+    is_revealed_manually = false
 
     display_state =
       DisplayState.from_input_state(%{
         presences: presences,
-        manual_reveal: manual_reveal
+        is_revealed_manually: is_revealed_manually
       })
 
     state = %{
       display_state: display_state,
       room_id: room_id,
       presences: presences,
-      manual_reveal: manual_reveal,
+      is_revealed_manually: is_revealed_manually,
       start_time: now(),
       version: 0,
       display_version: 0
@@ -45,7 +45,7 @@ defmodule QuickAverage.RoomManager do
         %{
           version: version,
           display_version: display_version,
-          manual_reveal: manual_reveal,
+          is_revealed_manually: is_revealed_manually,
           presences: presences
         } = state
       )
@@ -59,7 +59,7 @@ defmodule QuickAverage.RoomManager do
       display_state =
       DisplayState.from_input_state(%{
         presences: presences,
-        manual_reveal: manual_reveal
+        is_revealed_manually: is_revealed_manually
       })
 
     if Enum.empty?(users) do
@@ -87,25 +87,30 @@ defmodule QuickAverage.RoomManager do
   end
 
   @impl true
-  def handle_call({:toggle_reveal, name}, _from, state) do
+  def handle_call({:set_reveal, is_revealed} = message, _from, state)
+      when is_boolean(is_revealed) do
     new_state = %{
       state
-      | manual_reveal: !state.manual_reveal,
+      | is_revealed_manually: is_revealed,
         version: state.version + 1
     }
 
     PubSubInterface.broadcast(
       state.room_id,
-      {:set_reveal, name, new_state.manual_reveal}
+      message
     )
 
     {:reply, :ok, new_state}
   end
 
   @impl true
-  def handle_call({:set_reveal, false}, _from, state) do
-    new_state = %{state | manual_reveal: false, version: state.version + 1}
-    {:reply, :ok, new_state}
+  def handle_call({:send_flash, level, message}, _from, state) do
+    PubSubInterface.broadcast(
+      state.room_id,
+      {:show_flash, level, message}
+    )
+
+    {:reply, :ok, state}
   end
 
   @impl true
@@ -146,10 +151,17 @@ defmodule QuickAverage.RoomManager do
     )
   end
 
-  def set_reveal(room_id, false) do
+  def set_reveal(room_id, name, is_revealed) when is_boolean(is_revealed) do
     GenServer.call(
       name(room_id),
-      {:set_reveal, false}
+      {:set_reveal, is_revealed}
+    )
+  end
+
+  def send_flash(room_id, level, message) do
+    GenServer.call(
+      name(room_id),
+      {:send_flash, level, message}
     )
   end
 

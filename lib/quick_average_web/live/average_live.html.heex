@@ -31,9 +31,18 @@
     <%= if @is_admin do %>
       <div class="mb-3">
         <.button phx-click="clear_clicked">Clear Numbers</.button>
-        <.button phx-click="reveal_clicked">
-          <%= reveal_text(@manual_reveal?) %>
-        </.button>
+      </div>
+
+      <div class="mb-3">
+        <.input
+          phx-click="reveal_manually"
+          id="is_revealed_manually_toggle"
+          name="is_revealed_manually_toggle"
+          field={@is_revealed_manually}
+          value={@is_revealed_manually}
+          type="toggle"
+          label="Reveal Manually 🎩🐇"
+        />
       </div>
     <% end %>
 
