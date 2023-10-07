@@ -2,7 +2,7 @@ defmodule Support.Factory do
   alias QuickAverage.User
 
   def input_state_for(users) when is_list(users) do
-    %{presences: presences_for(users), manual_reveal: false}
+    %{presences: presences_for(users), is_revealed_manually: false}
   end
 
   def presences_for(users) when is_list(users) do

@@ -126,7 +126,7 @@ defmodule QuickAverage.DisplayStateTest do
         ]
         |> Factory.presences_for()
 
-      %{input_state: %{presences: presences, manual_reveal: true}}
+      %{input_state: %{presences: presences, is_revealed_manually: true}}
     end
 
     test("the average is Waiting", %{
@@ -164,7 +164,7 @@ defmodule QuickAverage.DisplayStateTest do
         ]
         |> Factory.presences_for()
 
-      %{input_state: %{presences: presences, manual_reveal: true}}
+      %{input_state: %{presences: presences, is_revealed_manually: true}}
     end
 
     test("the average is Waiting", %{
