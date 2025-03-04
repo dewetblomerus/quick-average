@@ -5,7 +5,7 @@ defmodule QuickAverage.MixProject do
     [
       app: :quick_average,
       version: "0.1.0",
-      elixir: "~> 1.15",
+      elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),

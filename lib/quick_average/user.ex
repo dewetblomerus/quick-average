@@ -21,7 +21,7 @@ defmodule QuickAverage.User do
   end
 
   def from_params(params) do
-    clean_params = changeset(params).changes()
+    clean_params = changeset(params).changes
     struct(__MODULE__, clean_params)
   end
 end
