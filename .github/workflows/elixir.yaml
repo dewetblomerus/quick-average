@@ -25,8 +25,8 @@ jobs:
     - name: Set up Elixir
       uses: erlef/setup-beam@v1
       with:
-        otp-version: 26.0.2
-        elixir-version: 1.15.1
+        otp-version: 27.2.4
+        elixir-version: 1.18.2
 
     - name: Checkout code
       uses: actions/checkout@v3
