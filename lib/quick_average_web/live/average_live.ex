@@ -170,7 +170,7 @@ defmodule QuickAverageWeb.AverageLive do
 
   @impl true
   def handle_info(%DisplayState{users: users, average: average}, socket) do
-    is_admin = socket.assigns.is_admin || is_alone?(users)
+    is_admin = socket.assigns.is_admin || alone?(users)
 
     if is_admin do
       send(self(), :persist_admin)
@@ -226,7 +226,7 @@ defmodule QuickAverageWeb.AverageLive do
     {:noreply, new_socket}
   end
 
-  defp is_alone?(users), do: length(users) < 2
+  defp alone?(users), do: length(users) < 2
 
   defp generate_admin_token(room_id) do
     Phoenix.Token.sign(
