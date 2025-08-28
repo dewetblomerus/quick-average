@@ -7,7 +7,8 @@ defmodule QuickAverage.DisplayState do
 
   def from_input_state(%{
         presences: presences,
-        is_revealed_manually: is_revealed_manually
+        is_revealed_manually: is_revealed_manually,
+        sort_by_number: sort_by_number
       }) do
     presences
     |> Map.values()
@@ -16,6 +17,7 @@ defmodule QuickAverage.DisplayState do
     |> determine_active_users()
     |> determine_should_reveal(is_revealed_manually)
     |> update_user_display_numbers()
+    |> sort_by_number(sort_by_number)
     |> determine_average()
   end
 
@@ -105,5 +107,24 @@ defmodule QuickAverage.DisplayState do
     else
       DisplayNumber.parse(Enum.sum(numbers) / Enum.count(numbers))
     end
+  end
+
+  defp sort_by_number(state, false), do: state
+
+  defp sort_by_number(state, true) do
+    users =
+      state.users
+      |> Enum.sort_by(fn user ->
+        case user.number do
+          # Group 1 (atoms), priority 0
+          :waiting -> {1, 0}
+          # Group 1 (atoms), priority 1
+          :hidden -> {1, 1}
+          # Group 0 (numbers), negative for descending
+          number when is_number(number) -> {0, -number}
+        end
+      end)
+
+    state |> Map.put(:users, users)
   end
 end

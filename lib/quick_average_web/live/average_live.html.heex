@@ -44,6 +44,18 @@
       />
     </div>
 
+    <div class="mb-3">
+      <.input
+        phx-click="sort_by_number"
+        id="sort_by_number_toggle"
+        name="sort_by_number_toggle"
+        field={@sort_by_number}
+        value={@sort_by_number}
+        type="toggle"
+        label="Sort by Number"
+      />
+    </div>
+
     <h2 class="font-semibold text-lg pb-2">
       Average: <%= @average %>
     </h2>

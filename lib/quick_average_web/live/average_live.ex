@@ -28,6 +28,7 @@ defmodule QuickAverageWeb.AverageLive do
         flash_timer: nil,
         is_admin: false,
         is_revealed_manually: false,
+        sort_by_number: false,
         name: "",
         number: nil,
         only_viewing: false,
@@ -164,6 +165,28 @@ defmodule QuickAverageWeb.AverageLive do
   end
 
   @impl true
+  def handle_event("sort_by_number", params, %{assigns: assigns} = socket) do
+    sort_by_number = params["value"] == "true"
+
+    RoomManager.set_sort_by_number(assigns.room_id, sort_by_number)
+
+    verb =
+      if sort_by_number do
+        "sorted"
+      else
+        "unsorted"
+      end
+
+    RoomManager.send_flash(
+      assigns.room_id,
+      :info,
+      "Numbers #{verb}"
+    )
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_info(:ask_frontend_to_restore_user, socket) do
     {:noreply, push_event(socket, "restore_user", %{})}
   end
@@ -222,6 +245,14 @@ defmodule QuickAverageWeb.AverageLive do
   def handle_info({:set_reveal, is_revealed_manually}, socket) do
     new_socket =
       assign(socket, is_revealed_manually: is_revealed_manually)
+
+    {:noreply, new_socket}
+  end
+
+  @impl true
+  def handle_info({:sort_by_number, sort_by_number}, socket) do
+    new_socket =
+      assign(socket, :sort_by_number, sort_by_number)
 
     {:noreply, new_socket}
   end

@@ -7,8 +7,8 @@ defmodule QuickAverageWeb.UserListItem do
   def display_user(assigns) do
     ~H"""
     <div class="flex flex-nowrap justify-between even:bg-gray-200 last:rounded-b-xl">
-      <div class="pl-4"><%= @name %></div>
-      <div class="text-right pr-4"><%= display_number(@number) %></div>
+      <div class="user-name pl-4"><%= @name %></div>
+      <div class="user-number text-right pr-4"><%= display_number(@number) %></div>
     </div>
     """
   end
