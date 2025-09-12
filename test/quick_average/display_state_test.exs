@@ -118,15 +118,14 @@ defmodule QuickAverage.DisplayStateTest do
 
   describe("from_presences/1 without all numbers present but reveal clicked") do
     setup do
-      presences =
+      users =
         [
           %QuickAverage.User{name: "De Wet", number: 42},
           %QuickAverage.User{name: "Nildecided", number: nil},
           %QuickAverage.User{name: "Undecided", number: ""}
         ]
-        |> Factory.presences_for()
 
-      %{input_state: %{presences: presences, is_revealed_manually: true}}
+      %{input_state: Factory.input_state_for(users, is_revealed_manually: true)}
     end
 
     test("the average is Waiting", %{
@@ -156,15 +155,14 @@ defmodule QuickAverage.DisplayStateTest do
 
   describe("from_presences/1 without no numbers present but reveal clicked") do
     setup do
-      presences =
+      users =
         [
           %QuickAverage.User{name: "De Wet", number: nil},
           %QuickAverage.User{name: "Nildecided", number: nil},
           %QuickAverage.User{name: "Undecided", number: nil}
         ]
-        |> Factory.presences_for()
 
-      %{input_state: %{presences: presences, is_revealed_manually: true}}
+      %{input_state: Factory.input_state_for(users, is_revealed_manually: true)}
     end
 
     test("the average is Waiting", %{
