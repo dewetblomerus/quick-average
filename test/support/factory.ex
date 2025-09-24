@@ -1,8 +1,12 @@
 defmodule Support.Factory do
   alias QuickAverage.User
 
-  def input_state_for(users) when is_list(users) do
-    %{presences: presences_for(users), is_revealed_manually: false}
+  def input_state_for(users, opts \\ []) when is_list(users) do
+    %{
+      presences: presences_for(users),
+      is_revealed_manually: Keyword.get(opts, :is_revealed_manually, false),
+      sort_by_number: Keyword.get(opts, :sort_by_number, false)
+    }
   end
 
   def presences_for(users) when is_list(users) do

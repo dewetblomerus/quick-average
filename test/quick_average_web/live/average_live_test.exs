@@ -100,6 +100,48 @@ defmodule QuickAverageWeb.AverageLiveTest do
       assert rendered =~ "Marysol"
       assert rendered =~ "Viewing 📺"
     end
+
+    test "sorts the users by number", %{conn: conn, room_id: room_id} do
+      {:ok, view, _html} = live(conn, ~p"/#{room_id}")
+
+      users = [
+        %User{
+          name: "Bob",
+          number: 420,
+          only_viewing: false
+        },
+        %User{
+          name: "De Wet",
+          number: 440,
+          only_viewing: false
+        },
+        %User{
+          name: "Alice",
+          number: :hidden,
+          only_viewing: false
+        },
+        %User{
+          name: "Marysol",
+          number: :waiting,
+          only_viewing: false
+        }
+      ]
+
+      display_state =
+        users
+        |> Factory.input_state_for(
+          is_revealed_manually: true,
+          sort_by_number: true
+        )
+        |> DisplayState.from_input_state()
+
+      send(view.pid, display_state)
+
+      assert render(view)
+             |> Floki.parse_document!()
+             |> Floki.find(".user-name")
+             |> Enum.map(&Floki.text/1) == ["De Wet", "Bob", "Alice", "Marysol"]
+    end
   end
 
   test "shows and clears a flash of who cleared the numbers", %{conn: conn} do

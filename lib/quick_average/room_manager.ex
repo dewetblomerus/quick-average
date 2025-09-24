@@ -17,11 +17,13 @@ defmodule QuickAverage.RoomManager do
     Logger.info("Starting RoomManager for #{room_id} 🤖")
     presences = PresenceInterface.list(room_id)
     is_revealed_manually = false
+    sort_by_number = false
 
     display_state =
       DisplayState.from_input_state(%{
         presences: presences,
-        is_revealed_manually: is_revealed_manually
+        is_revealed_manually: is_revealed_manually,
+        sort_by_number: false
       })
 
     state = %{
@@ -29,6 +31,7 @@ defmodule QuickAverage.RoomManager do
       room_id: room_id,
       presences: presences,
       is_revealed_manually: is_revealed_manually,
+      sort_by_number: sort_by_number,
       start_time: now(),
       version: 0,
       display_version: 0
@@ -46,6 +49,7 @@ defmodule QuickAverage.RoomManager do
           version: version,
           display_version: display_version,
           is_revealed_manually: is_revealed_manually,
+          sort_by_number: sort_by_number,
           presences: presences
         } = state
       )
@@ -59,7 +63,8 @@ defmodule QuickAverage.RoomManager do
       display_state =
       DisplayState.from_input_state(%{
         presences: presences,
-        is_revealed_manually: is_revealed_manually
+        is_revealed_manually: is_revealed_manually,
+        sort_by_number: sort_by_number
       })
 
     if Enum.empty?(users) do
@@ -114,6 +119,22 @@ defmodule QuickAverage.RoomManager do
   end
 
   @impl true
+  def handle_call({:sort_by_number, sort_by_number} = message, _from, state) do
+    new_state = %{
+      state
+      | sort_by_number: sort_by_number,
+        version: state.version + 1
+    }
+
+    PubSubInterface.broadcast(
+      state.room_id,
+      message
+    )
+
+    {:reply, :ok, new_state}
+  end
+
+  @impl true
   def handle_cast(%{presences: presences}, state) do
     :telemetry.execute([:quick_average, :presences_received], %{
       event: "presences_received",
@@ -162,6 +183,13 @@ defmodule QuickAverage.RoomManager do
     GenServer.call(
       name(room_id),
       {:send_flash, level, message}
+    )
+  end
+
+  def set_sort_by_number(room_id, sort_by_number) do
+    GenServer.call(
+      name(room_id),
+      {:sort_by_number, sort_by_number}
     )
   end
 
