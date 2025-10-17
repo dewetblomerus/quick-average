@@ -32,27 +32,27 @@ defmodule QuickAverage.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:esbuild, "~> 0.6", runtime: Mix.env() == :dev},
+      {:credo, "~> 1.7.13", only: [:dev, :test], runtime: false},
+      {:esbuild, "~> 0.10.0", runtime: Mix.env() == :dev},
       {:ex_check, "~> 0.16.0", only: [:dev], runtime: false},
-      {:floki, ">= 0.34.0", only: :test},
+      {:floki, ">= 0.38.0", only: :test},
       {:gettext, "~> 0.22"},
-      {:heroicons, "> 0.5.2"},
-      {:jason, "~> 1.2"},
+      {:heroicons, "~> 0.5.6"},
+      {:jason, "~> 1.4.4"},
       {:mimic, "~> 1.7", only: :test},
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
-      {:mix_test_watch, "~> 1.1", only: :dev, runtime: false},
+      {:mix_test_watch, "~> 1.3.0", only: :dev, runtime: false},
       {:phoenix_ecto, "~> 4.4.2"},
       {:phoenix_html, "~> 3.3"},
-      {:phoenix_live_dashboard, "> 0.8.0"},
-      {:phoenix_live_reload, "~> 1.4", only: :dev},
+      {:phoenix_live_dashboard, "~> 0.8.7"},
+      {:phoenix_live_reload, "~> 1.6.1", only: :dev},
       {:phoenix_live_view, "~> 0.20.0"},
       {:phoenix, "~> 1.7.7", override: true},
-      {:plug_cowboy, "~> 2.6"},
-      {:sobelow, "~> 0.12", only: [:dev, :test], runtime: false},
+      {:plug_cowboy, "~> 2.7.4"},
+      {:sobelow, "~> 0.14.1", only: [:dev, :test], runtime: false},
       {:tailwind, "~> 0.1.10", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
-      {:telemetry_poller, "~> 1.0"}
+      {:telemetry_poller, "~> 1.3.0"}
     ]
   end
 
