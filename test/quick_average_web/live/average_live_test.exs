@@ -24,7 +24,7 @@ defmodule QuickAverageWeb.AverageLiveTest do
         user: User.from_params(%{"name" => "Anonymous", "number" => nil})
       }
 
-      expect(
+      stub(
         Presence,
         :track,
         fn _, ^room_id, _, ^trackable_user -> :ok end
@@ -32,7 +32,7 @@ defmodule QuickAverageWeb.AverageLiveTest do
 
       stub(ManagerSupervisor, :create, fn ^room_id -> :ok end)
 
-      expect(Phoenix.PubSub, :subscribe, fn QuickAverage.PubSub, _ ->
+      stub(Phoenix.PubSub, :subscribe, fn QuickAverage.PubSub, _ ->
         :ok
       end)
 

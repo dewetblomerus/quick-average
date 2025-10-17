@@ -36,10 +36,10 @@ defmodule QuickAverage.MixProject do
       {:esbuild, "~> 0.10.0", runtime: Mix.env() == :dev},
       {:ex_check, "~> 0.16.0", only: [:dev], runtime: false},
       {:floki, ">= 0.38.0", only: :test},
-      {:gettext, "~> 0.22"},
+      {:gettext, "~> 1.0"},
       {:heroicons, "~> 0.5.6"},
       {:jason, "~> 1.4.4"},
-      {:mimic, "~> 1.7", only: :test},
+      {:mimic, "~> 2.1", only: :test},
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 1.3.0", only: :dev, runtime: false},
       {:phoenix_ecto, "~> 4.4.2"},
@@ -51,7 +51,7 @@ defmodule QuickAverage.MixProject do
       {:plug_cowboy, "~> 2.7.4"},
       {:sobelow, "~> 0.14.1", only: [:dev, :test], runtime: false},
       {:tailwind, "~> 0.1.10", runtime: Mix.env() == :dev},
-      {:telemetry_metrics, "~> 0.6"},
+      {:telemetry_metrics, "~> 1.1"},
       {:telemetry_poller, "~> 1.3.0"}
     ]
   end
