@@ -34,11 +34,13 @@ defmodule QuickAverage.MixProject do
     [
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:esbuild, "~> 0.6", runtime: Mix.env() == :dev},
+      {:ex_check, "~> 0.16.0", only: [:dev], runtime: false},
       {:floki, ">= 0.34.0", only: :test},
       {:gettext, "~> 0.22"},
       {:heroicons, "> 0.5.2"},
       {:jason, "~> 1.2"},
       {:mimic, "~> 1.7", only: :test},
+      {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 1.1", only: :dev, runtime: false},
       {:phoenix_ecto, "~> 4.4.2"},
       {:phoenix_html, "~> 3.3"},
