@@ -55,7 +55,6 @@ if config_env() == :prod do
       port: port
     ],
     secret_key_base: secret_key_base
-
 else
   config :quick_average,
          :dns_cluster_query,
