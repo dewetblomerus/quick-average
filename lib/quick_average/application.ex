@@ -10,7 +10,8 @@ defmodule QuickAverage.Application do
     children = [
       # Start the Telemetry supervisor
       QuickAverageWeb.Telemetry,
-      {DNSCluster, query: Application.fetch_env!(:quick_average, :dns_cluster_query)},
+      {DNSCluster,
+       query: Application.fetch_env!(:quick_average, :dns_cluster_query)},
       # Start the PubSub system
       {Phoenix.PubSub, name: QuickAverage.PubSub},
       QuickAverage.Presence,
