@@ -1,4 +1,5 @@
 version: 2
+# Touch to re-trigger Dependabot on 2026-06-02.
 
 multi-ecosystem-groups:
   all-dependencies:
