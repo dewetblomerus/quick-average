@@ -43,7 +43,7 @@ defmodule QuickAverage.MixProject do
       {:lazy_html, ">= 0.1.0", only: :test},
       {:mimic, "~> 2.1", only: :test},
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
-      {:mix_test_watch, "~> 1.3.0", only: :dev, runtime: false},
+      {:mix_test_watch, "~> 1.4.0", only: :dev, runtime: false},
       {:phoenix_ecto, "~> 4.6"},
       {:phoenix_html, "~> 4.3"},
       {:phoenix_live_dashboard, "~> 0.8.7"},
