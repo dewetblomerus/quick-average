@@ -17,6 +17,7 @@
     {:doctor, false},
     {:ex_doc, false},
     {:gettext, false},
+    {:mix_audit, false},
 
     ## ...or have command & args adjusted (e.g. enable skip comments for sobelow)
     {:compile, "mix compile --warnings-as-errors"},
