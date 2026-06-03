@@ -5,7 +5,7 @@ defmodule QuickAverage.MixProject do
     [
       app: :quick_average,
       version: "0.1.0",
-      elixir: "~> 1.18",
+      elixir: "~> 1.19",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -35,7 +35,7 @@ defmodule QuickAverage.MixProject do
       {:credo, "~> 1.7.13", only: [:dev, :test], runtime: false},
       {:dns_cluster, "~> 0.2.0"},
       {:esbuild, "~> 0.10.0", runtime: Mix.env() == :dev},
-      {:ex_check, "~> 0.16.0", only: [:dev], runtime: false},
+      {:ex_check, "~> 0.16.0", only: [:dev, :test], runtime: false},
       {:floki, ">= 0.38.0", only: :test},
       {:gettext, "~> 1.0"},
       {:heroicons, "~> 0.5.6"},
