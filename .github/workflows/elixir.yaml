@@ -10,5 +10,5 @@ permissions:
   contents: read
 
 jobs:
-  mix-check:
+  actions-elixir:
     uses: dewetblomerus/actions-elixir/.github/workflows/elixir-ci.yml@main
