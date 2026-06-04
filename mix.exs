@@ -50,7 +50,7 @@ defmodule QuickAverage.MixProject do
       {:phoenix_live_reload, "~> 1.6.1", only: :dev},
       {:phoenix_live_view, "~> 1.1"},
       {:phoenix, "~> 1.8", override: true},
-      {:plug_cowboy, "~> 2.7.4"},
+      {:plug_cowboy, "~> 2.8.1"},
       {:sobelow, "~> 0.14.1", only: [:dev, :test], runtime: false},
       {:tailwind, "~> 0.4", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.1"},
