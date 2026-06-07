@@ -8,7 +8,7 @@ defmodule QuickAverage.DisplayNumber do
   end
 
   defp integerize(number) when is_float(number) do
-    if number && number == round(number) do
+    if number == round(number) do
       round(number)
     else
       number

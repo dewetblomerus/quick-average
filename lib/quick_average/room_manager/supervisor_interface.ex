@@ -1,6 +1,4 @@
 defmodule QuickAverage.RoomManager.SupervisorInterface do
-  require Logger
-
   @genserver QuickAverage.RoomManager
   @supervisor QuickAverage.RoomManagerSupervisor
 
