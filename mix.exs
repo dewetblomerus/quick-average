@@ -5,7 +5,7 @@ defmodule QuickAverage.MixProject do
     [
       app: :quick_average,
       version: "0.1.0",
-      elixir: "~> 1.19",
+      elixir: "~> 1.20",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -33,6 +33,7 @@ defmodule QuickAverage.MixProject do
   defp deps do
     [
       {:credo, "~> 1.7.13", only: [:dev, :test], runtime: false},
+      {:bandit, "~> 1.12"},
       {:dns_cluster, "~> 0.2.0"},
       {:esbuild, "~> 0.10.0", runtime: Mix.env() == :dev},
       {:ex_check, "~> 0.16.0", only: [:dev, :test], runtime: false},
@@ -50,7 +51,6 @@ defmodule QuickAverage.MixProject do
       {:phoenix_live_reload, "~> 1.6.1", only: :dev},
       {:phoenix_live_view, "~> 1.1"},
       {:phoenix, "~> 1.8", override: true},
-      {:plug_cowboy, "~> 2.8.1"},
       {:sobelow, "~> 0.14.1", only: [:dev, :test], runtime: false},
       {:tailwind, "~> 0.4", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.1"},
