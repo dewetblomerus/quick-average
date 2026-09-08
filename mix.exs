@@ -34,7 +34,7 @@ defmodule QuickAverage.MixProject do
     [
       {:credo, "~> 1.7.13", only: [:dev, :test], runtime: false},
       {:bandit, "~> 1.12"},
-      {:dns_cluster, "~> 0.2.0"},
+      {:dns_cluster, "~> 0.3.0"},
       {:esbuild, "~> 0.10.0", runtime: Mix.env() == :dev},
       {:ex_check, "~> 0.16.0", only: [:dev, :test], runtime: false},
       {:floki, ">= 0.38.0", only: :test},
