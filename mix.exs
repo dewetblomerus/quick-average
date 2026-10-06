@@ -36,7 +36,7 @@ defmodule QuickAverage.MixProject do
       {:bandit, "~> 1.12"},
       {:dns_cluster, "~> 0.3.0"},
       {:esbuild, "~> 0.10.0", runtime: Mix.env() == :dev},
-      {:ex_check, "~> 0.16.0", only: [:dev, :test], runtime: false},
+      {:ex_check, "~> 0.17.0", only: [:dev, :test], runtime: false},
       {:floki, ">= 0.38.0", only: :test},
       {:gettext, "~> 1.0"},
       {:heroicons, "~> 0.5.6"},
@@ -51,7 +51,7 @@ defmodule QuickAverage.MixProject do
       {:phoenix_live_reload, "~> 1.7.0", only: :dev},
       {:phoenix_live_view, "~> 1.1"},
       {:phoenix, "~> 1.8", override: true},
-      {:sobelow, "~> 0.15.0", only: [:dev, :test], runtime: false},
+      {:sobelow, "~> 0.16.0", only: [:dev, :test], runtime: false},
       {:tailwind, "~> 0.4", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.1"},
       {:telemetry_poller, "~> 1.3.0"}
